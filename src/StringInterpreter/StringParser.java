@@ -8,6 +8,7 @@ package StringInterpreter;
  *
  * @author Bart
  * @author Chris
+ * @author Patrick
  */
 public class StringParser {
     
