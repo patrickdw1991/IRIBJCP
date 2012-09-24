@@ -4,8 +4,55 @@
 #include <String.h>
 
 
+
+typedef struct 
+{
+       int id;                  
+       char name[20];           //Sensor_X
+       int value;               //0 or 1
+       char unit[20];             
+       char timestamp[22];        //2012-12-31_12:59:59
+       int is_alarm;         //True:False
+}BinSen;
+
+
+BinSen test[12];
+
+int initializeDatabase()
+{   
+
+
+      int isAlarm = 0;
+      int i;
+      for(i = 0; i < 12; i++){
+              test[i].id = i;
+              test[i].is_alarm = isAlarm;
+              if(isAlarm == 0){
+                         isAlarm =1;        
+              }else{
+                         isAlarm =0;      
+              }
+      }  
+      
+      for(i = 0; i<12; i++){
+              printf("%d %d\n",test[i].id,test[i].is_alarm); 
+      }     
+    
+}
+
+char* createValueString(){
+    int i;
+    char send[50];
+    for(i = 0; i < 12; i++){
+          send = test[i];
+          } 
+    return send;
+}
+
 int main()
 {
+    initializeDatabase();
+    
 WORD wVersionRequested;
 WSADATA wsaData;
 int wsaerr;
