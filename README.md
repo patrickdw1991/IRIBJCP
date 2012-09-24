@@ -1,5 +1,5 @@
-Dit is de github voor het IRI project van:
-Chris Goedhart
-Jesse van Stegeren
-Bart Malestijn
-Patrick de Wit
+Dit is de github voor het IRI project van:/n
+Chris Goedhart/n
+Jesse van Stegeren/n
+Bart Malestijn/n
+Patrick de Wit/n
