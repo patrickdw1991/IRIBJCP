@@ -16,6 +16,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 /**
  *
  * @author Bart
+ * @author Chris
  */
 public class LineChart extends JFrame{
 
