@@ -1,6 +1,0 @@
-project groep:
-
-Jesse van Stegeren
-Chris Goedhart
-Bart Malestijn
-Patrick de Wit
