@@ -7,6 +7,7 @@ package StringInterpreter;
 /**
  *
  * @author Bart
+ * @author Chris
  */
 public class StringParser {
     
