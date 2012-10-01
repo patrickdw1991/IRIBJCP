@@ -8,11 +8,11 @@
 typedef struct
 {
        int id;
-       char name[20];           //Sensor_X
-       int value;               //0 or 1
+       char name[20];             //Sensor_X
+       int value;                 //0 or 1
        char unit[20];
        char timestamp[22];        //2012-12-31_12:59:59
-       int is_alarm;         //True:False
+       int is_alarm;              //True:False
 }BinSen;
 
 
@@ -32,26 +32,36 @@ int initializeDatabase()
               }else{
                          isAlarm =0;
               }
+              test[i].value = 1337;
       }
-
-      for(i = 0; i<12; i++){
-              printf("%d %d\n",test[i].id,test[i].is_alarm);
-      }
-
 }
 
-char* createValueString(){
+char stringBuffer[50] = "S,";
+
+int createValueString(){
     int i;
-    char send[50];
+    int j;    
     for(i = 0; i < 12; i++){
-          send = test[i];
-          }
-    return send;
+          char tmp[10];
+          char tmp2[5]; 
+          itoa(test[i].id, tmp, 2);
+          strcat(tmp, "=");
+          itoa(test[i].value, tmp2, 5);
+          strcat(tmp, tmp2);
+          strcat(tmp, ",");
+          strcat(stringBuffer, tmp);
+    }    
+    char end[10] = "E";
+    strcat(stringBuffer, end);
+    printf("Final buffer = %s \n",stringBuffer);
+
 }
 
 int main()
 {
-    	initializeDatabase();
+    initializeDatabase();
+    createValueString();
+    
 	WORD wVersionRequested;
 	WSADATA wsaData;
 	int wsaerr;
