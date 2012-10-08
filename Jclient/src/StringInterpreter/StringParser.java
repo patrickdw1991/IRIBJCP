@@ -24,8 +24,8 @@ public class StringParser {
         int j = 2;
         while (j <= split.length -1) {
             values.put(split[i],split[j]);
-            i += 1;
-            j += 1;
+            i += 2;
+            j += 2;
         }
         for (Enumeration e = values.keys(); e.hasMoreElements();){
             System.out.println("V: "+e.nextElement());
