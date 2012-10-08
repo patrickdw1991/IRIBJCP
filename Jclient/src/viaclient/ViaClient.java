@@ -6,10 +6,12 @@ package viaclient;
 
 import StringInterpreter.StringParser;
 import userInterface.GraphScreen;
+import java.util.*;
 
 /**
  *
  * @author bmalestein
+ * @author Jesse
  */
 public class ViaClient {
 
@@ -22,13 +24,17 @@ public class ViaClient {
 
         GraphScreen screen = new GraphScreen();
         screen.setVisible(true);
-        
-        String dbString = "STRT,sensor1,12342,0019";
+
+        String dbString = "S,sensor1,12342,sensor2,123123,E";
 
         StringParser parse = new StringParser();
 
-        System.out.println(parse.validate(dbString));
-        
-        parse.readSensorValues(dbString);
+        Dictionary sensors = parse.readSensors(dbString);
+
+        for (Enumeration e = sensors.keys(); e.hasMoreElements();) {
+            System.out.println("V: " + e.nextElement());
+        }
+
+
     }
 }
