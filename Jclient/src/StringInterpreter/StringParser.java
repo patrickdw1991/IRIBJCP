@@ -4,27 +4,31 @@
  */
 package StringInterpreter;
 
+import java.util.*;
+
 /**
  *
  * @author Bart
  * @author Chris
  * @author Patrick
+ * @author Jesse
  */
 public class StringParser {
     
-    public static Boolean validate(String test) {
-        if (test.substring(0, 4).equals("STRT") && Integer.parseInt(test.substring(test.length() - 4, test.length())) == test.length()) {
-            return true;
-        }
-        return false;
-    }
-    
     public void readSensorValues(String test) {
-        String values = test.substring(5, test.length() -4);
+        String message = test.substring(1, test.length() -1);
         String regex = ",";
-        String[] split = values.split(regex);
-        for (int i = 0; i < split.length; i++) {
-            System.out.println("V: "+split[i]);
+        Dictionary values = new Hashtable();
+        String[] split = message.split(regex);
+        int i = 1;
+        int j = 2;
+        while (j <= split.length -1) {
+            values.put(split[i],split[j]);
+            i += 1;
+            j += 1;
+        }
+        for (Enumeration e = values.keys(); e.hasMoreElements();){
+            System.out.println("V: "+e.nextElement());
         }
     
     }
