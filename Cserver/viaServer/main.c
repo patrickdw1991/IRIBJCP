@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <String.h>
-
+#include <process.h>
 
 
 typedef struct
@@ -16,52 +16,57 @@ typedef struct
 }BinSen;
 
 
-BinSen test[12];
+BinSen binary[12];
+
+
 
 int initializeDatabase()
 {
-
-
       int isAlarm = 0;
       int i;
       for(i = 0; i < 12; i++){
-              test[i].id = i;
-              test[i].is_alarm = isAlarm;
+              binary[i].id = i;
+              binary[i].is_alarm = isAlarm;
               if(isAlarm == 0){
                          isAlarm =1;
               }else{
                          isAlarm =0;
               }
-              test[i].value = 1337;
+              binary[i].value = 1337;
       }
 }
 
-char stringBuffer[50] = "S,";
 
-int createValueString(){
-    int i;
-    int j;    
+
+char *createValueString(){
+	static char stringBuffer[100] = "S,";
+
+    int i;    
     for(i = 0; i < 12; i++){
           char tmp[10];
           char tmp2[5]; 
-          itoa(test[i].id, tmp, 2);
+          itoa(binary[i].id, tmp, 2);
           strcat(tmp, "=");
-          itoa(test[i].value, tmp2, 5);
+          itoa(binary[i].value, tmp2, 5);
           strcat(tmp, tmp2);
           strcat(tmp, ",");
           strcat(stringBuffer, tmp);
     }    
     char end[10] = "E";
     strcat(stringBuffer, end);
-    printf("Final buffer = %s \n",stringBuffer);
-
+    //printf("Final buffer = %s \n",stringBuffer);
+	
+	return stringBuffer;
 }
+
+void sendSocket();
+void receiveSocket();
 
 int main()
 {
     initializeDatabase();
     createValueString();
-    
+      
 	WORD wVersionRequested;
 	WSADATA wsaData;
 	int wsaerr;
@@ -180,37 +185,48 @@ int main()
     		break;
 	}
 
+    _beginthread( sendSocket, 0, m_socket);
+    _beginthread( receiveSocket, 0, m_socket);
+    
+    while(1){
+		sleep(100);         
+    }
 
 
-	while(1){
-         	int bytesSent = SOCKET_ERROR;
-         	int bytesRecv = SOCKET_ERROR;
-         	char sendbuf[100] = "test\n";
-         	char recvbuf[100] = "";
-         	char boem[] = "quit";
-
-         while(1){
-                  printf("Server: Ready to receive! \n");
-                  bytesRecv = recv(m_socket, recvbuf, 100, 0);
-                  if(bytesRecv != SOCKET_ERROR){
-                               if(!strncmp(recvbuf,boem, 4)){
-                                       exit(EXIT_SUCCESS);
-                               }
-                               break;
-                  }
-         }
-         while(1){
-                  bytesSent = send(m_socket, sendbuf, 100, 0);
-                  if (bytesSent != SOCKET_ERROR){
-                                break;
-                  }
-         }
-}
-
-
-WSACleanup();
+	WSACleanup();
 
  	system("PAUSE");
   	return 0;
+}
+
+void sendSocket(SOCKET m_socket){
+	while(1){
+		char *p1;
+		//p1 = createValueString();
+		int bytesSent = SOCKET_ERROR;
+		char sendbuf[5] = "hmmm\n";
+		bytesSent = send(m_socket, sendbuf, 5, 0);
+        if (bytesSent != SOCKET_ERROR){
+			printf("message send");
+        }		
+		sleep(100);
+    }
+}
+
+void receiveSocket(SOCKET m_socket){
+     while(1){
+        int bytesRecv = SOCKET_ERROR;
+		char recvbuf[100] = "";
+		char quit[] = "quit";
+		if(bytesRecv != SOCKET_ERROR){
+			//Check for a certain message
+			if(!strncmp(recvbuf,quit, 4)){
+				exit(EXIT_SUCCESS);
+			}else{
+				printf("Unrecognized command: %s \n", recvbuf);
+			}
+		}
+		sleep(100);         
+     }    
 }
 
