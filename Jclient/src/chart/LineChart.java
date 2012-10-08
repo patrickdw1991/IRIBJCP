@@ -18,6 +18,7 @@ import org.jfree.data.xy.XYSeriesCollection;
  * @author Bart
  * @author Chris
  * @author Patrick
+ * @author Jesse
  */
 public class LineChart extends JFrame{
 
@@ -31,8 +32,6 @@ public class LineChart extends JFrame{
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         setContentPane(chartPanel);
         
-        
-
     }
 
     /**

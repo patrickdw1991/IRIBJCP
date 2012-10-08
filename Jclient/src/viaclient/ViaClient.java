@@ -23,12 +23,12 @@ public class ViaClient {
         GraphScreen screen = new GraphScreen();
         screen.setVisible(true);
         
-        String dbString = "STRT,sensor1,12342,0019";
+        String dbString = "S,sensor1,12342,sensor2,123123,E";
 
         StringParser parse = new StringParser();
-
-        System.out.println(parse.validate(dbString));
         
         parse.readSensorValues(dbString);
+        
+        
     }
 }

@@ -22,10 +22,7 @@ public class GraphScreen extends javax.swing.JFrame {
      */
     public GraphScreen() {
         initComponents();
-
-
-
-
+        
     }
 
     /**
