@@ -15,21 +15,19 @@ import java.util.*;
  */
 public class StringParser {
     
-    public void readSensorValues(String test) {
-        String message = test.substring(1, test.length() -1);
+    public Dictionary readSensors(String input) {
+        String message = input.substring(1, input.length() -1);
         String regex = ",";
-        Dictionary values = new Hashtable();
+        Dictionary sensors = new Hashtable();
         String[] split = message.split(regex);
         int i = 1;
         int j = 2;
         while (j <= split.length -1) {
-            values.put(split[i],split[j]);
+            sensors.put(split[i],split[j]);
             i += 2;
             j += 2;
         }
-        for (Enumeration e = values.keys(); e.hasMoreElements();){
-            System.out.println("V: "+e.nextElement());
-        }
-    
+        
+        return sensors;
     }
 }
