@@ -8,6 +8,9 @@ import chart.LineChart;
 import java.awt.BorderLayout;
 import org.jfree.chart.ChartPanel;
 import org.jfree.ui.RefineryUtilities;
+import StringInterpreter.StringParser;
+import userInterface.GraphScreen;
+import java.util.*;
 
 /**
  *
@@ -44,7 +47,10 @@ public class GraphScreen extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String dbString = "S,sensor1,12342,sensor2,123123,E";
+            StringParser parse = new StringParser();
+            String[] strings = parse.getSensorNames(dbString);
+            //String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });

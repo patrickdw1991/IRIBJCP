@@ -29,12 +29,11 @@ public class ViaClient {
 
         StringParser parse = new StringParser();
 
-        Dictionary sensors = parse.readSensors(dbString);
+        Dictionary sensors = parse.readMessage(dbString);
 
         for (Enumeration e = sensors.keys(); e.hasMoreElements();) {
             System.out.println("V: " + e.nextElement());
         }
-
 
     }
 }

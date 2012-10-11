@@ -13,6 +13,7 @@ import java.util.logging.Logger;
  *
  * @author bmalestein
  */
+
 public class SocketHandler {
 
     Socket socket = null;
