@@ -5,8 +5,8 @@
 package viaclient;
 
 import StringInterpreter.StringParser;
-import userInterface.GraphScreen;
 import java.util.*;
+import userInterface.GraphScreen;
 
 /**
  *

@@ -77,17 +77,17 @@
     </Container>
     <Component class="javax.swing.JComboBox" name="jComboBox1">
       <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="Binary"/>
-            <StringItem index="1" value="Digital 10"/>
-            <StringItem index="2" value="Digital 100"/>
-          </StringArray>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.DefaultComboBoxModel(new String[] { &quot;Binary&quot;, &quot;Digital 10&quot;, &quot;Digital 100&quot; })" type="code"/>
         </Property>
       </Properties>
       <Events>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jComboBox1MouseReleased"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox()"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { &quot;Binary&quot;, &quot;Digital 10&quot;, &quot;Digital 100&quot; }));"/>
+      </AuxValues>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
       <AuxValues>

@@ -4,13 +4,9 @@
  */
 package userInterface;
 
-import chart.LineChart;
-import java.awt.BorderLayout;
-import org.jfree.chart.ChartPanel;
-import org.jfree.ui.RefineryUtilities;
 import StringInterpreter.StringParser;
-import userInterface.GraphScreen;
-import java.util.*;
+import chart.LineChart;
+import org.jfree.ui.RefineryUtilities;
 
 /**
  *
@@ -61,6 +57,7 @@ public class GraphScreen extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Binary", "Digital 10", "Digital 100" }));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Binary", "Digital 10", "Digital 100" }));
         jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
