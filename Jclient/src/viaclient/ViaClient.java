@@ -8,6 +8,11 @@ import StringInterpreter.StringParser;
 import java.util.*;
 import sensorData.SensorList;
 import userInterface.GraphScreen;
+import Print.Printerhandler;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +30,18 @@ public class ViaClient {
         
         //SensorList sensorList = new SensorList();
         //sensorList.init();
+        //SocketHandler sockH = new SocketHandler();
+        //sockH.openSocket();
+        Printerhandler print = new Printerhandler();
+        try {
+            print.Printerhandler();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ViaClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ViaClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        SensorList sensorList = new SensorList();
+        sensorList.init();
 
         //GraphScreen screen = new GraphScreen(sensorList);
         //screen.setVisible(true);
