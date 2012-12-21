@@ -8,6 +8,7 @@ import StringInterpreter.StringParser;
 import java.util.*;
 import sensorData.SensorList;
 import userInterface.GraphScreen;
+import Print.Printerhandler;
 
 /**
  *
@@ -22,7 +23,8 @@ public class ViaClient {
     public static void main(String[] args) {
         //SocketHandler sockH = new SocketHandler();
         //sockH.openSocket();
-        
+        Printerhandler print = new Printerhandler();
+        print.Printerhandler();
         SensorList sensorList = new SensorList();
         sensorList.init();
 
