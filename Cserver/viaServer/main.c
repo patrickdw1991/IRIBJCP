@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <String.h>
 #include <process.h>
+#include <time.h>
 
 
 typedef struct
@@ -20,52 +21,18 @@ BinSen binary[12];
 
 
 
-int initializeDatabase()
-{
-      int isAlarm = 0;
-      int i;
-      for(i = 0; i < 12; i++){
-              binary[i].id = i;
-              binary[i].is_alarm = isAlarm;
-              if(isAlarm == 0){
-                         isAlarm =1;
-              }else{
-                         isAlarm =0;
-              }
-              binary[i].value = 1337;
-      }
-}
-
-
-
-char *createValueString(){
-	static char stringBuffer[100] = "S,";
-
-    int i;    
-    for(i = 0; i < 12; i++){
-          char tmp[10];
-          char tmp2[5]; 
-          itoa(binary[i].id, tmp, 2);
-          strcat(tmp, "=");
-          itoa(binary[i].value, tmp2, 5);
-          strcat(tmp, tmp2);
-          strcat(tmp, ",");
-          strcat(stringBuffer, tmp);
-    }    
-    char end[10] = "E";
-    strcat(stringBuffer, end);
-    //printf("Final buffer = %s \n",stringBuffer);
-	
-	return stringBuffer;
-}
 
 void sendSocket();
 void receiveSocket();
+char *createValueString();
+int initializeDatabase();
+int timestamp();
 
 int main()
 {
     initializeDatabase();
     createValueString();
+    timestamp();
       
 	WORD wVersionRequested;
 	WSADATA wsaData;
@@ -185,8 +152,8 @@ int main()
     		break;
 	}
 
-    _beginthread( sendSocket, 0, m_socket);
-    _beginthread( receiveSocket, 0, m_socket);
+    _beginthread( sendSocket, 0, &m_socket);
+    _beginthread( receiveSocket, 0, &m_socket);
     
     while(1){
 		sleep(100);         
@@ -199,25 +166,25 @@ int main()
   	return 0;
 }
 
-void sendSocket(SOCKET m_socket){
+void sendSocket(SOCKET *m_socket){
 	while(1){
 		char *p1;
-		//p1 = createValueString();
+		p1 = createValueString();
 		int bytesSent = SOCKET_ERROR;
-		char sendbuf[5] = "hmmm\n";
-		bytesSent = send(m_socket, sendbuf, 5, 0);
+		bytesSent = send(*m_socket, p1, 100, 0);
         if (bytesSent != SOCKET_ERROR){
-			printf("message send");
+			//printf("message send");
         }		
 		sleep(100);
     }
 }
 
-void receiveSocket(SOCKET m_socket){
+void receiveSocket(SOCKET *m_socket){
      while(1){
         int bytesRecv = SOCKET_ERROR;
 		char recvbuf[100] = "";
 		char quit[] = "quit";
+		bytesRecv = recv(*m_socket, recvbuf, 100, 0);
 		if(bytesRecv != SOCKET_ERROR){
 			//Check for a certain message
 			if(!strncmp(recvbuf,quit, 4)){
@@ -230,3 +197,55 @@ void receiveSocket(SOCKET m_socket){
      }    
 }
 
+
+char *createValueString(){
+	static char stringBuffer[100] = "hhmz\n";
+    
+	return stringBuffer;
+}
+
+int initializeDatabase()
+{
+    
+      int isAlarm = 0;
+      int i;
+      for(i = 0; i < 12; i++){
+              
+              binary[i].id = i;
+              
+              char id[4]; 
+              itoa(binary[i].id, id, 4);
+              char tmp[12] = "Binary_";
+              strcat(tmp, id);
+              strcpy(binary[i].name, tmp);
+              
+              strcpy(binary[i].unit, "t");
+              
+              binary[i].is_alarm = isAlarm;
+              if(isAlarm == 0){
+                         isAlarm =1;
+              }else{
+                         isAlarm =0;
+              }
+              binary[i].value = 1337;
+      }
+}
+
+int timestamp()
+{
+    time_t ltime;
+    struct tm *Tm;
+ 
+    ltime=time(NULL);
+    Tm=localtime(&ltime);
+ 
+    printf("%d %d %d, %d:%d:%d \n",
+            Tm->tm_mday,
+            Tm->tm_mon,
+            Tm->tm_year + 1900,
+            Tm->tm_hour,
+            Tm->tm_min,
+            Tm->tm_sec);
+            
+    
+}

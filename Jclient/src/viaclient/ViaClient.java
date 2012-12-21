@@ -5,8 +5,9 @@
 package viaclient;
 
 import StringInterpreter.StringParser;
-import userInterface.GraphScreen;
 import java.util.*;
+import sensorData.SensorList;
+import userInterface.GraphScreen;
 
 /**
  *
@@ -21,20 +22,23 @@ public class ViaClient {
     public static void main(String[] args) {
         //SocketHandler sockH = new SocketHandler();
         //sockH.openSocket();
+        
+        SensorList sensorList = new SensorList();
+        sensorList.init();
 
-        GraphScreen screen = new GraphScreen();
+        GraphScreen screen = new GraphScreen(sensorList);
         screen.setVisible(true);
 
         String dbString = "S,sensor1,12342,sensor2,123123,E";
 
         StringParser parse = new StringParser();
 
-        Dictionary sensors = parse.readSensors(dbString);
+        Dictionary sensors = parse.readMessage(dbString);
 
         for (Enumeration e = sensors.keys(); e.hasMoreElements();) {
-            System.out.println("V: " + e.nextElement());
+            Object nextElement = e.nextElement();
+            //System.out.println("V: " + nextElement + " = " + sensors.get(nextElement));
         }
-
 
     }
 }
