@@ -17,7 +17,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import sensorData.Sensor;
 import sensorData.SensorList;
-import Print.Printerhandler;
+import Print.PrinterHandler;
 
 /**
  *
@@ -160,7 +160,14 @@ public class GraphScreen extends javax.swing.JFrame {
 
         //GetData, init graph
 
-        test(jList1.getSelectedValue().toString());
+        String temp = jComboBox1.getSelectedItem().toString();
+        if (temp.equals("Binary")) {
+            test(jList1.getSelectedValue().toString(), 1);
+        } else if (temp.equals("Digital 10")) {
+            test(jList1.getSelectedValue().toString(), 2);
+        } else if (temp.equals("Digital 100")) {
+            test(jList1.getSelectedValue().toString(), 3);
+        }
 
     }//GEN-LAST:event_jList1MouseReleased
 
@@ -183,11 +190,11 @@ public class GraphScreen extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
-        Printerhandler.printList(sensorList);
+        PrinterHandler.printList(sensorList);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void test(String sensorName) {
-        Sensor sensor = sensorList.getSensor(sensorName);
+    private void test(String sensorName, int floep) {
+        Sensor sensor = sensorList.getSensor(sensorName, floep);
 
         final XYDataset dataset = createDataset(sensor);
         final JFreeChart chart = createChart(dataset, sensorName, "", "");

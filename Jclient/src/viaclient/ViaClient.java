@@ -8,7 +8,7 @@ import StringInterpreter.StringParser;
 import java.util.*;
 import sensorData.SensorList;
 import userInterface.GraphScreen;
-import Print.Printerhandler;
+import Print.PrinterHandler;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -29,7 +29,7 @@ public class ViaClient {
         //SocketHandler sockH = new SocketHandler();
         //sockH.openSocket();
         
-        //Printerhandler print = new Printerhandler();
+        //Printerhandler print = new PrinterHandler();
 
         SensorList sensorList = new SensorList();
         sensorList.init();
