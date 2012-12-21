@@ -17,6 +17,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import sensorData.Sensor;
 import sensorData.SensorList;
+import Print.Printerhandler;
 
 /**
  *
@@ -33,7 +34,9 @@ public class GraphScreen extends javax.swing.JFrame {
     public GraphScreen(SensorList sensorList) {
         this.sensorList = sensorList;
         initComponents();
-        jList1.setListData(sensorList.getSensorList(1));
+        jList1.setListData(sensorList.getSensorNames(1));
+        
+        
     }
 
     /**
@@ -52,6 +55,7 @@ public class GraphScreen extends javax.swing.JFrame {
         jList2 = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         graphPanel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,6 +109,13 @@ public class GraphScreen extends javax.swing.JFrame {
             .addGap(0, 538, Short.MAX_VALUE)
         );
 
+        jButton1.setText("Print All");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -115,7 +126,9 @@ public class GraphScreen extends javax.swing.JFrame {
                     .addComponent(jScrollPane2)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))
                 .addGap(37, 37, 37)
-                .addComponent(graphPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(graphPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -127,7 +140,9 @@ public class GraphScreen extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                        .addComponent(jButton1))
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -158,13 +173,18 @@ public class GraphScreen extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         String temp = jComboBox1.getSelectedItem().toString();
         if (temp.equals("Binary")) {
-            jList1.setListData(sensorList.getSensorList(1));
+            jList1.setListData(sensorList.getSensorNames(1));
         } else if (temp.equals("Digital 10")) {
-            jList1.setListData(sensorList.getSensorList(2));
+            jList1.setListData(sensorList.getSensorNames(2));
         } else if (temp.equals("Digital 100")) {
-            jList1.setListData(sensorList.getSensorList(3));
+            jList1.setListData(sensorList.getSensorNames(3));
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        Printerhandler.printList(sensorList);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void test(String sensorName) {
         Sensor sensor = sensorList.getSensor(sensorName);
@@ -275,6 +295,7 @@ public class GraphScreen extends javax.swing.JFrame {
 //    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel graphPanel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;

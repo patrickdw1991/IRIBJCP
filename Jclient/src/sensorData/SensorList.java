@@ -32,7 +32,7 @@ public class SensorList {
         }
     }
 
-    public String[] getSensorList(int list) {
+    public String[] getSensorNames(int list) {
         List<Sensor> temp = null;
         switch (list) {
             case 1:
