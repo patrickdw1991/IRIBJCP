@@ -14,20 +14,46 @@ import java.util.List;
 public class SensorList {
 
     private List<Sensor> sensors = new ArrayList();
+    private List<Sensor> digitaal = new ArrayList();
+    private List<Sensor> analoog = new ArrayList();
 
     public void init() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             Sensor sensor = new Sensor("sensor " + i);
             sensors.add(sensor);
         }
+        for (int i = 0; i < 5; i++) {
+            Sensor sensor = new Sensor("digitaal " + i);
+            digitaal.add(sensor);
+        }
+        for (int i = 0; i < 5; i++) {
+            Sensor sensor = new Sensor("analoog " + i);
+            analoog.add(sensor);
+        }
     }
 
-    public String[] getSensorList() {
-        String[] arr = new String[sensors.size()];
-        for (int i = 0; i < sensors.size(); i++) {
-            arr[i] = sensors.get(i).getName();
+    public String[] getSensorList(int list) {
+        List<Sensor> temp = null;
+        switch (list) {
+            case 1:
+                temp = analoog;
+                break;
+            case 2:
+                temp = digitaal;
+                break;
+            case 3:
+                temp = sensors;
+                break;
+        }
+
+
+        String[] arr = new String[temp.size()];
+
+        for (int i = 0; i < temp.size(); i++) {
+            arr[i] = temp.get(i).getName();
         }
         return arr;
+
     }
 
     public Sensor getSensor(String sensorName) {

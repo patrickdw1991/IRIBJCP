@@ -25,6 +25,7 @@ public class ViaClient {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
         //SocketHandler sockH = new SocketHandler();
         //sockH.openSocket();
         
