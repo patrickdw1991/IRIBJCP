@@ -33,7 +33,7 @@ public class GraphScreen extends javax.swing.JFrame {
     public GraphScreen(SensorList sensorList) {
         this.sensorList = sensorList;
         initComponents();
-        jList1.setListData(sensorList.getSensorList());
+        jList1.setListData(sensorList.getSensorList(1));
     }
 
     /**
@@ -75,6 +75,11 @@ public class GraphScreen extends javax.swing.JFrame {
         jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jComboBox1MouseReleased(evt);
+            }
+        });
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
             }
         });
 
@@ -145,8 +150,21 @@ public class GraphScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_jList1MouseReleased
 
     private void jComboBox1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseReleased
-        // TODO add your handling code here:
+        
+
+
     }//GEN-LAST:event_jComboBox1MouseReleased
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        String temp = jComboBox1.getSelectedItem().toString();
+        if (temp.equals("Binary")) {
+            jList1.setListData(sensorList.getSensorList(1));
+        } else if (temp.equals("Digital 10")) {
+            jList1.setListData(sensorList.getSensorList(2));
+        } else if (temp.equals("Digital 100")) {
+            jList1.setListData(sensorList.getSensorList(3));
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void test(String sensorName) {
         Sensor sensor = sensorList.getSensor(sensorName);
