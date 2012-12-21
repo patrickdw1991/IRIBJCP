@@ -112,8 +112,8 @@ int main()
 
 	if (bind(m_socket, (SOCKADDR*)&service, sizeof(service)) == SOCKET_ERROR)
 	{
-    		printf("bind() failed: %ld.\n", WSAGetLastError());
-    		closesocket(m_socket);
+    	printf("bind() failed: %ld.\n", WSAGetLastError());
+    	closesocket(m_socket);
    	 	return 0;
 	}
 	else
@@ -122,10 +122,10 @@ int main()
 	}
 
 	if (listen( m_socket, 1) == SOCKET_ERROR)
-    		printf("listen(): Error listening on socket %ld.\n", WSAGetLastError());
+    	printf("listen(): Error listening on socket %ld.\n", WSAGetLastError());
 	else
 	{
-    		printf("listen() is OK, I'm waiting for connections...\n");
+    	printf("listen() is OK, I'm waiting for connections...\n");
 	}
 	// Create a temporary SOCKET object called AcceptSocket for accepting connections.
 	SOCKET AcceptSocket;
@@ -137,19 +137,19 @@ int main()
 	// Do some verification...
 	while (1)
 	{
-    		AcceptSocket = SOCKET_ERROR;
+    	AcceptSocket = SOCKET_ERROR;
 
-      		while (AcceptSocket == SOCKET_ERROR)
-       		{
-        		AcceptSocket = accept(m_socket, NULL, NULL);
-       		}
+      	while (AcceptSocket == SOCKET_ERROR)
+       	{
+        	AcceptSocket = accept(m_socket, NULL, NULL);
+       	}
 
    		// else, accept the connection...
    		// When the client connection has been accepted, transfer control from the
    		// temporary socket to the original socket and stop checking for new connections.
-    		printf("Server: Client Connected!\n");
-    		m_socket = AcceptSocket;
-    		break;
+    	printf("Server: Client Connected!\n");
+    	m_socket = AcceptSocket;
+    	break;
 	}
 
     _beginthread( sendSocket, 0, &m_socket);
@@ -167,15 +167,38 @@ int main()
 }
 
 void sendSocket(SOCKET *m_socket){
+     //Handshake
 	while(1){
-		char *p1;
-		p1 = createValueString();
+		//char *p1;
+		char sendBuff[100] = "shakeStart\n";
+		char recvbuf[100] = "";
+		//p1 = createValueString();
 		int bytesSent = SOCKET_ERROR;
-		bytesSent = send(*m_socket, p1, 100, 0);
-        if (bytesSent != SOCKET_ERROR){
-			//printf("message send");
+		int bytesRecv = SOCKET_ERROR;
+		bytesSent = send(*m_socket, sendBuff, 100, 0);
+        if (bytesSent != SOCKET_ERROR){                      
+			bytesRecv = recv(*m_socket, recvbuf, 100, 0);
+            printf("%s", recvbuf);
+            break;
         }		
 		sleep(100);
+    }
+    //Sensor send
+    while(1){
+        char *p1;
+        char recvbuf[100] = "";
+		p1 = createValueString();
+		int bytesSent = SOCKET_ERROR;
+		int bytesRecv = SOCKET_ERROR;
+		bytesSent = send(*m_socket, p1, 100, 0);
+        if (bytesSent != SOCKET_ERROR){                      
+			bytesRecv = recv(*m_socket, recvbuf, 100, 0);
+            printf("%s", recvbuf);
+			sleep(2000);
+            exit(EXIT_SUCCESS);
+        }		
+		sleep(100);     
+                      
     }
 }
 
@@ -199,7 +222,12 @@ void receiveSocket(SOCKET *m_socket){
 
 
 char *createValueString(){
-	static char stringBuffer[100] = "hhmz\n";
+	char temp[100];
+	strcpy(temp, binary[1].name);
+	strcat(temp, "\n");
+
+	static char stringBuffer[100];
+	strcpy(stringBuffer, temp);
     
 	return stringBuffer;
 }
