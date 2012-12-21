@@ -25,26 +25,16 @@ public class ViaClient {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SocketHandler sockH = new SocketHandler();
-        sockH.openSocket();
-        
-        //SensorList sensorList = new SensorList();
-        //sensorList.init();
         //SocketHandler sockH = new SocketHandler();
         //sockH.openSocket();
-        Printerhandler print = new Printerhandler();
-        try {
-            print.Printerhandler();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ViaClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ViaClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        //Printerhandler print = new Printerhandler();
+
         SensorList sensorList = new SensorList();
         sensorList.init();
 
-        //GraphScreen screen = new GraphScreen(sensorList);
-        //screen.setVisible(true);
+        GraphScreen screen = new GraphScreen(sensorList);
+        screen.setVisible(true);
 
         //String dbString = "S,sensor1,12342,sensor2,123123,E";
 
