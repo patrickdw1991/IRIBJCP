@@ -5,6 +5,7 @@
 package viaclient;
 
 import sensorData.SensorList;
+import userInterface.GraphScreen;
 
 /**
  *
@@ -23,13 +24,13 @@ public class ViaClient {
         sensorList.init();
 
         SocketHandler sockH = new SocketHandler(sensorList);
-        sockH.openSocket();
+        //sockH.openSocket();
 
         //Printerhandler print = new PrinterHandler();
 
 
-        //GraphScreen screen = new GraphScreen(sensorList);
-        //screen.setVisible(true);
+        GraphScreen screen = new GraphScreen(sensorList);
+        screen.setVisible(true);
 
 
 

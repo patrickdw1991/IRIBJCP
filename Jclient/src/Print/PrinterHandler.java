@@ -22,7 +22,9 @@ import sensorData.SensorList;
 
 /**
  *
- * @author patrick
+ * @author Patrick
+ * @author Darth Vader
+ * @author Han Solo
  */
 public class PrinterHandler {
 

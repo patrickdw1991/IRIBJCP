@@ -4,6 +4,7 @@
  */
 package userInterface;
 
+import Print.PrinterHandler;
 import chart.LineChart;
 import java.awt.BorderLayout;
 import java.util.List;
@@ -180,7 +181,7 @@ public class GraphScreen extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
-        //PrinterHandler.printList(sensorList);
+        PrinterHandler.printList(sensorList);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void test(String sensorName, int floep) {
