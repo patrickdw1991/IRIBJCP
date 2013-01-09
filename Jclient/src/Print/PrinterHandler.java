@@ -8,6 +8,10 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.*;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Copies;
+import javax.print.attribute.standard.Sides;
 import sensorData.SensorList;
 
 /**
@@ -19,9 +23,9 @@ public class PrinterHandler {
     public static void printList(SensorList list) {
         InputStream is = null;
         try {
-            File file = new File("printtest.txt");
-            FileWriter fstream = new FileWriter("printtest.txt");
-            
+            File file = new File("testpage.pdf");
+            //FileWriter fstream = new FileWriter("printtest.txt");
+
             is = new BufferedInputStream(new FileInputStream(file));
             System.out.println("test");
             PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
@@ -33,8 +37,11 @@ public class PrinterHandler {
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             Doc doc = new SimpleDoc(is, flavor, null);
             DocPrintJob job = service.createPrintJob();
+            PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
+            aset.add(new Copies(1));
+            aset.add(Sides.ONE_SIDED);
             try {
-                job.print(doc, null);
+                job.print(doc, aset);
             } catch (PrintException e) {
                 e.printStackTrace();
             }
