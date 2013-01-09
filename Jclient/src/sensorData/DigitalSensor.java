@@ -49,4 +49,10 @@ public class DigitalSensor implements Sensor {
     public List getValues() {
         return values;
     }
+    
+    public void update(String name, int value){
+        this.name = name;
+        values.add(value);   
+        
+    }
 }

@@ -4,15 +4,7 @@
  */
 package viaclient;
 
-import StringInterpreter.StringParser;
-import java.util.*;
 import sensorData.SensorList;
-import userInterface.GraphScreen;
-import Print.PrinterHandler;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,27 +18,20 @@ public class ViaClient {
      */
     public static void main(String[] args) {
 
-        //SocketHandler sockH = new SocketHandler();
-        //sockH.openSocket();
-        
-        //Printerhandler print = new PrinterHandler();
 
         SensorList sensorList = new SensorList();
         sensorList.init();
 
-        GraphScreen screen = new GraphScreen(sensorList);
-        screen.setVisible(true);
+        SocketHandler sockH = new SocketHandler(sensorList);
+        sockH.openSocket();
 
-        //String dbString = "S,sensor1,12342,sensor2,123123,E";
+        //Printerhandler print = new PrinterHandler();
 
-        //StringParser parse = new StringParser();
 
-        //Dictionary sensors = parse.readMessage(dbString);
+        //GraphScreen screen = new GraphScreen(sensorList);
+        //screen.setVisible(true);
 
-        //for (Enumeration e = sensors.keys(); e.hasMoreElements();) {
-        //    Object nextElement = e.nextElement();
-            //System.out.println("V: " + nextElement + " = " + sensors.get(nextElement));
-        //}
+
 
     }
 }

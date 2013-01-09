@@ -17,4 +17,6 @@ public interface Sensor {
     public String getName();
 
     public List<Integer> getValues();
+    
+    public void update(String name, int value);
 }

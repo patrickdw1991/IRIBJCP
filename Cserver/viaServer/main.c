@@ -13,7 +13,9 @@ typedef struct
        int value;                 //0 or 1
        char unit[20];
        char timestamp[22];        //2012-12-31_12:59:59
-       int is_alarm;              //True:False
+       int isAlarm;              //True:False
+       int low;
+       int high;
 }BinSen;
 
 
@@ -24,14 +26,14 @@ BinSen binary[12];
 
 void sendSocket();
 void receiveSocket();
-char *createValueString();
+char *createValueString(int i);
 int initializeDatabase();
 int timestamp();
 
 int main()
 {
     initializeDatabase();
-    createValueString();
+    //createValueString();
     timestamp();
       
 	WORD wVersionRequested;
@@ -153,7 +155,7 @@ int main()
 	}
 
     _beginthread( sendSocket, 0, &m_socket);
-    _beginthread( receiveSocket, 0, &m_socket);
+    //_beginthread( receiveSocket, 0, &m_socket);
     
     while(1){
 		sleep(100);         
@@ -185,17 +187,18 @@ void sendSocket(SOCKET *m_socket){
     }
     //Sensor send
     while(1){
-        char *p1;
-        char recvbuf[100] = "";
-		p1 = createValueString();
-		int bytesSent = SOCKET_ERROR;
-		int bytesRecv = SOCKET_ERROR;
-		bytesSent = send(*m_socket, p1, 100, 0);
-        if (bytesSent != SOCKET_ERROR){                      
-			bytesRecv = recv(*m_socket, recvbuf, 100, 0);
-            printf("%s", recvbuf);
-			sleep(2000);
-            exit(EXIT_SUCCESS);
+        int i;     
+        for(i = 0; i<10; i++){
+			char *p1;
+			char recvbuf[100] = "";
+			p1 = createValueString(i);
+			int bytesSent = SOCKET_ERROR;
+			int bytesRecv = SOCKET_ERROR;
+			bytesSent = send(*m_socket, p1, 100, 0);
+			if (bytesSent != SOCKET_ERROR){                      
+				bytesRecv = recv(*m_socket, recvbuf, 100, 0);
+				//printf("%s", recvbuf);
+			}
         }		
 		sleep(100);     
                       
@@ -221,10 +224,29 @@ void receiveSocket(SOCKET *m_socket){
 }
 
 
-char *createValueString(){
-	char temp[100];
-	strcpy(temp, binary[1].name);
-	strcat(temp, "\n");
+char *createValueString(int sensor){
+	char temp[100] = "";
+	char buffer[10];
+	
+	strcpy(temp, binary[sensor].name);
+	strcat(temp, ";");
+	
+    itoa(binary[sensor].value, buffer, 10);
+    strcat(temp, buffer);
+    strcat(temp, ";");
+    
+    strcat(temp, binary[sensor].unit);
+    strcat(temp, ";");
+    
+    binary[sensor].isAlarm = 0;
+    if((binary[sensor].value <= binary[sensor].low) || (binary[sensor].value >= binary[sensor].high)){
+         binary[sensor].isAlarm = 1;
+         printf("alarm!");
+    }
+    itoa(binary[sensor].isAlarm, buffer, 10);
+    strcat(temp, buffer);
+    
+    strcat(temp, "\n");
 
 	static char stringBuffer[100];
 	strcpy(stringBuffer, temp);
@@ -239,23 +261,28 @@ int initializeDatabase()
       int i;
       for(i = 0; i < 12; i++){
               
-              binary[i].id = i;
+              binary[i].id = i;             
               
-              char id[4]; 
-              itoa(binary[i].id, id, 4);
+              char buffer[10];
+              itoa(i, buffer, 10);
+              
               char tmp[12] = "Binary_";
-              strcat(tmp, id);
+              
+              strcat(tmp, buffer);
+              
               strcpy(binary[i].name, tmp);
               
-              strcpy(binary[i].unit, "t");
+              strcpy(binary[i].unit, "Nm/C");
               
-              binary[i].is_alarm = isAlarm;
-              if(isAlarm == 0){
-                         isAlarm =1;
-              }else{
-                         isAlarm =0;
-              }
-              binary[i].value = 1337;
+              binary[i].isAlarm = isAlarm;
+              
+              binary[i].low = 0;
+              binary[i].high = 8;
+              
+              //LO + (float)rand()/((float)RAND_MAX/(HI-LO));
+              binary[i].value = (float)rand()/((float)RAND_MAX/10);
+              
+              printf("%s", binary[i].name);
       }
 }
 

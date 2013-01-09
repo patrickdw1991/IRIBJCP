@@ -23,6 +23,7 @@ public class AnalogSensor implements Sensor {
     public AnalogSensor(String name, String is_alarm) {
         this.name = name;
         this.is_alarm = is_alarm;
+        /*
         values.add(random.nextInt(10));
         values.add(random.nextInt(10));
         values.add(random.nextInt(10));
@@ -33,7 +34,7 @@ public class AnalogSensor implements Sensor {
         values.add(random.nextInt(10));
         values.add(random.nextInt(10));
         values.add(random.nextInt(10));
-        
+        */
     }
 
     @Override
@@ -44,5 +45,11 @@ public class AnalogSensor implements Sensor {
     @Override
     public List getValues() {
         return values;
+    }
+    
+    @Override
+    public void update(String name, int value){
+        this.name = name;
+        values.add(value);   
     }
 }
