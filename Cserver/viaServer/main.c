@@ -9,31 +9,46 @@
 typedef struct
 {
        int id;
-       char name[20];             //Sensor_X
+       char name[40];             //Binairy_X
        int value;                 //0 or 1
-       char unit[20];
+       char unit[15];             //ex: N/m2 or C    
        char timestamp[22];        //2012-12-31_12:59:59
-       int isAlarm;              //True:False
-       int low;
-       int high;
+       char alarm[20];            //if value is 1, alarm or no alarm if no alarm
 }BinSen;
 
 
 BinSen binary[12];
 
 
+typedef struct
+{
+       int id;
+       char name[40];             //Analog_X
+       int value;                 //anythin
+       char unit[15];             //ex: N/m2 or C
+       char timestamp[22];        //2012-12-31_12:59:59
+       int isAlarm;               //True:False
+       int low;                   //low alarm limit                            
+       int high;                  //high alarm limit
+       char lowAlarm[20];         //low alarm message
+       char highAlarm[20];        //high alarm message
+}AnaSen;
+
+
+AnaSen analog[12];
+
 
 
 void sendSocket();
 void receiveSocket();
-char *createValueString(int i);
+SOCKET acceptSocket(SOCKET);
+char *createValueString(int);
 int initializeDatabase();
 int timestamp();
 
 int main()
 {
     initializeDatabase();
-    //createValueString();
     timestamp();
       
 	WORD wVersionRequested;
@@ -129,36 +144,16 @@ int main()
 	{
     	printf("listen() is OK, I'm waiting for connections...\n");
 	}
-	// Create a temporary SOCKET object called AcceptSocket for accepting connections.
-	SOCKET AcceptSocket;
+	
+	
 
-	// Create a continuous loop that checks for connections requests. If a connection
-	// request occurs, call the accept function to handle the request.
-	printf("Server: Waiting for a client to connect...\n");
-	printf("***Hint: Server is ready...run your client program...***\n");
-	// Do some verification...
-	while (1)
-	{
-    	AcceptSocket = SOCKET_ERROR;
-
-      	while (AcceptSocket == SOCKET_ERROR)
-       	{
-        	AcceptSocket = accept(m_socket, NULL, NULL);
-       	}
-
-   		// else, accept the connection...
-   		// When the client connection has been accepted, transfer control from the
-   		// temporary socket to the original socket and stop checking for new connections.
-    	printf("Server: Client Connected!\n");
-    	m_socket = AcceptSocket;
-    	break;
-	}
-
-    _beginthread( sendSocket, 0, &m_socket);
+    //_beginthread( sendSocket, 0, &m_socket);
     //_beginthread( receiveSocket, 0, &m_socket);
     
     while(1){
-		sleep(100);         
+        m_socket = acceptSocket(m_socket);
+		sendSocket(&m_socket);
+        sleep(100);         
     }
 
 
@@ -182,7 +177,7 @@ void sendSocket(SOCKET *m_socket){
 			bytesRecv = recv(*m_socket, recvbuf, 100, 0);
             printf("%s", recvbuf);
             break;
-        }		
+        }
 		sleep(100);
     }
     //Sensor send
@@ -198,7 +193,10 @@ void sendSocket(SOCKET *m_socket){
 			if (bytesSent != SOCKET_ERROR){                      
 				bytesRecv = recv(*m_socket, recvbuf, 100, 0);
 				//printf("%s", recvbuf);
-			}
+			}else{
+                printf("client disconnected");  
+                exit(EXIT_SUCCESS);
+            }
         }		
 		sleep(100);     
                       
@@ -221,6 +219,33 @@ void receiveSocket(SOCKET *m_socket){
 		}
 		sleep(100);         
      }    
+}
+
+SOCKET acceptSocket(SOCKET m_socket){
+     	// Create a temporary SOCKET object called AcceptSocket for accepting connections.
+	SOCKET AcceptSocket;
+
+	// Create a continuous loop that checks for connections requests. If a connection
+	// request occurs, call the accept function to handle the request.
+	printf("Server: Waiting for a client to connect...\n");
+	printf("***Hint: Server is ready...run your client program...***\n");
+	// Do some verification...
+	while (1)
+	{
+    	AcceptSocket = SOCKET_ERROR;
+
+      	while (AcceptSocket == SOCKET_ERROR)
+       	{
+        	AcceptSocket = accept(m_socket, NULL, NULL);
+       	}
+
+   		// else, accept the connection...
+   		// When the client connection has been accepted, transfer control from the
+   		// temporary socket to the original socket and stop checking for new connections.
+    	printf("Server: Client Connected!\n");
+    	
+    	return AcceptSocket;
+	}    
 }
 
 
