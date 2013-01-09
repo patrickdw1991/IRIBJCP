@@ -4,12 +4,7 @@
  */
 package Print;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.*;
@@ -25,6 +20,8 @@ public class Printerhandler {
         InputStream is = null;
         try {
             File file = new File("printtest.txt");
+            FileWriter fstream = new FileWriter("printtest.txt");
+            
             is = new BufferedInputStream(new FileInputStream(file));
             System.out.println("test");
             PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
