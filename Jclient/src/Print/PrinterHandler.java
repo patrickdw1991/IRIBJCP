@@ -12,6 +12,12 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Copies;
 import javax.print.attribute.standard.Sides;
+import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import sensorData.SensorList;
 
 /**
@@ -21,9 +27,15 @@ import sensorData.SensorList;
 public class PrinterHandler {
 
     public static void printList(SensorList list) {
+        makePDF(list);
+        startPrint();
+        
+    }
+
+    public static void startPrint() {
         InputStream is = null;
         try {
-            File file = new File("testpage.pdf");
+            File file = new File("tmp.pdf");
             //FileWriter fstream = new FileWriter("printtest.txt");
 
             is = new BufferedInputStream(new FileInputStream(file));
@@ -56,4 +68,32 @@ public class PrinterHandler {
             }
         }
     }
+
+    public static void makePDF(SensorList list){
+        try {
+            PDDocument document = new PDDocument();
+            PDPage page = new PDPage();
+            document.addPage(page);
+            PDPageContentStream contentStream;
+            contentStream = new PDPageContentStream(document, page);
+            contentStream.beginText();
+            PDFont font = PDType1Font.TIMES_ROMAN;
+            contentStream.setFont(font, 12);
+            contentStream.moveTextPositionByAmount(100, 700);
+            String[] sensorNames = list.getSensorNames(3);
+            for(int x= 0; x<sensorNames.length;x++){
+                contentStream.drawString(sensorNames[x]+"\n");
+            }
+            contentStream.endText();
+            contentStream.close();
+            document.save("tmp.pdf");
+            document.close();
+        } catch (IOException ex) {
+            
+        } catch (COSVisitorException ex2) {
+            
+        }
+
+    }
+
 }
