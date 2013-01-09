@@ -100,6 +100,7 @@ public class SensorList {
             }else{
                 //Make new sensor
                 AnalogSensor sensor = new AnalogSensor(sensorName, "no");
+                sensor.setValue(value);
                 analoog.add(sensor);
             }
         }

@@ -19,4 +19,6 @@ public interface Sensor {
     public List<Integer> getValues();
     
     public void update(String name, int value);
+    
+    public void setValue(int value);
 }

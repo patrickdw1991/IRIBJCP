@@ -52,4 +52,9 @@ public class AnalogSensor implements Sensor {
         this.name = name;
         values.add(value);   
     }
+    
+    @Override
+    public void setValue(int value){
+        values.add(value);
+    }
 }

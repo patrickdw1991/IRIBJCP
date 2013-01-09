@@ -50,9 +50,14 @@ public class DigitalSensor implements Sensor {
         return values;
     }
     
+    @Override
     public void update(String name, int value){
         this.name = name;
         values.add(value);   
-        
+    }
+    
+    @Override
+    public void setValue(int value){
+        values.add(value);
     }
 }
