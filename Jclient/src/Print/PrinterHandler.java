@@ -14,7 +14,7 @@ import sensorData.SensorList;
  *
  * @author patrick
  */
-public class Printerhandler {
+public class PrinterHandler {
 
     public static void printList(SensorList list) {
         InputStream is = null;
@@ -40,12 +40,12 @@ public class Printerhandler {
             }
             is.close();
         } catch (IOException ex) {
-            Logger.getLogger(Printerhandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PrinterHandler.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 is.close();
             } catch (IOException ex) {
-                Logger.getLogger(Printerhandler.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PrinterHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
