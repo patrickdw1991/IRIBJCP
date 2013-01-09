@@ -4,10 +4,10 @@
  */
 package viaclient;
 
+import StringInterpreter.StringParser;
 import java.io.*;
 import java.net.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import sensorData.SensorList;
 
 /**
  *
@@ -15,9 +15,17 @@ import java.util.logging.Logger;
  */
 public class SocketHandler {
 
-    Socket socket = null;
-    PrintWriter out = null;
-    BufferedReader in = null;
+    private Socket socket = null;
+    private PrintWriter out = null;
+    private BufferedReader in = null;
+    private SensorList sensorList;
+    private StringParser parser;
+
+    public SocketHandler(SensorList sensorList) {
+        this.sensorList = sensorList;
+
+        parser = new StringParser(sensorList);
+    }
 
     public void openSocket() {
         try {
@@ -34,24 +42,7 @@ public class SocketHandler {
         handShake();
         receiveSensors();
     }
-//        
-//        
-//        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-//        String userInput;
-//        try {
-//            while ((userInput = stdIn.readLine()) != null) {
-//                out.println(userInput);
-//                System.out.println(in.readLine());
-//            }
-//
-//            out.close();
-//            in.close();
-//            stdIn.close();
-//            socket.close();
-//        } catch (IOException ex) {
-//            System.out.println("Not connected, reconnecting now...");
-//            openSocket();
-//        }
+
 
     private void handShake() {
         while (true) {
@@ -80,16 +71,17 @@ public class SocketHandler {
                 String sensor = in.readLine();
                 sensor = sensor.trim();
                 if (sensor.length() > 0) {
-                    System.out.println(sensor);
+                    //System.out.println(sensor);
+                    parser.readMessage(sensor);
                     out.println(sensor.length());
-                    break;
+                    
                 }
 
             } catch (IOException ex) {
-                System.out.println("Socket died");
+                System.exit(0);
             }
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException ex) {
                 System.out.println("sleep error");
             }
