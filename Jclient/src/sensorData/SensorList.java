@@ -89,7 +89,7 @@ public class SensorList {
      *
      * @return
      */
-    public void updateSensors(String sensorName, String value, String unit) {
+    public void updateSensors(String sensorName, int value, String unit) {
         for (int i = 0; i < analoog.size(); i++) {
             if (analoog.get(i).getName().equals(sensorName)) {
                 //Sensor does exist
