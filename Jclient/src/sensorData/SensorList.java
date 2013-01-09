@@ -19,15 +19,15 @@ public class SensorList {
 
     public void init() {
         for (int i = 0; i < 2; i++) {
-            Sensor sensor = new Sensor("sensor " + i);
+            AnalogSensor sensor = new AnalogSensor("floep " + i, "no");
             sensors.add(sensor);
         }
         for (int i = 0; i < 5; i++) {
-            Sensor sensor = new Sensor("digitaal " + i);
+            DigitalSensor sensor = new DigitalSensor("digitaal " + i, "unit 1", 10, 100);
             digitaal.add(sensor);
         }
         for (int i = 0; i < 5; i++) {
-            Sensor sensor = new Sensor("analoog " + i);
+            AnalogSensor sensor = new AnalogSensor("analoog " + i, "no");
             analoog.add(sensor);
         }
     }
@@ -46,22 +46,39 @@ public class SensorList {
                 break;
         }
 
-
         String[] arr = new String[temp.size()];
 
         for (int i = 0; i < temp.size(); i++) {
             arr[i] = temp.get(i).getName();
         }
         return arr;
-
     }
 
-    public Sensor getSensor(String sensorName) {
-        for (int i = 0; i < sensors.size(); i++) {
-            if (sensors.get(i).getName().equals(sensorName)) {
-                return sensors.get(i);
-            }
+    public Sensor getSensor(String sensorName, int sensorList) {
+        switch (sensorList) {
+            case 1:
+                for (int i = 0; i < analoog.size(); i++) {
+                    if (analoog.get(i).getName().equals(sensorName)) {
+                        return analoog.get(i);
+                    }
+                }
+                break;
+            case 2:
+                for (int i = 0; i < digitaal.size(); i++) {
+                    if (digitaal.get(i).getName().equals(sensorName)) {
+                        return digitaal.get(i);
+                    }
+                }
+                break;
+            case 3:
+                for (int i = 0; i < sensors.size(); i++) {
+                    if (sensors.get(i).getName().equals(sensorName)) {
+                        return sensors.get(i);
+                    }
+                }
+                break;
         }
+
         return null;
     }
 }

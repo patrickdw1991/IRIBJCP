@@ -12,32 +12,9 @@ import java.util.Random;
  *
  * @author Bart
  */
-public class Sensor {
+public interface Sensor {
 
-    private String name;
-    private List<Integer> values = new ArrayList();
-    Random random = new Random();
+    public String getName();
 
-    public Sensor(String name) {
-        this.name = name;
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-
-
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<Integer> getValues() {
-        return values;
-    }
+    public List<Integer> getValues();
 }
