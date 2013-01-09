@@ -97,12 +97,12 @@ public class SensorList {
                 //Sensor does exist
                 Sensor sensor = analoog.get(i);
                 sensor.update(sensorName, value);
-            }else{
-                //Make new sensor
-                AnalogSensor sensor = new AnalogSensor(sensorName, "no");
-                sensor.setValue(value);
-                analoog.add(sensor);
+                break;
             }
         }
+        //sensor not found
+        AnalogSensor sensor = new AnalogSensor(sensorName, "no");
+        sensor.setValue(value);
+        analoog.add(sensor);
     }
 }
