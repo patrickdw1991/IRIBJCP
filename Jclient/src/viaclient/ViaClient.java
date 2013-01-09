@@ -27,9 +27,10 @@ public class ViaClient {
         screen.setVisible(true);
         
         SocketHandler sockH = new SocketHandler(sensorList);
-        sockH.openSocket();
+        //sockH.openSocket();
 
         //Printerhandler print = new PrinterHandler();
+
 
 
 
