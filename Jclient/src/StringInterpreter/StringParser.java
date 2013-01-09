@@ -4,7 +4,7 @@
  */
 package StringInterpreter;
 
-import java.util.*;
+import java.awt.Toolkit;
 import sensorData.SensorList;
 
 /**
@@ -26,8 +26,7 @@ public class StringParser {
         String regex = ";";
         String[] split = input.split(regex);
 
-        for (int i = 0; i < split.length; i++) {
-            System.out.println(split[i]);
-        }
+        sensorList.updateSensors(split[0], Integer.parseInt(split[1]), split[2]);
+        //Toolkit.getDefaultToolkit().beep();
     }
 }

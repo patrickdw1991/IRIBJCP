@@ -231,6 +231,7 @@ char *createValueString(int sensor){
 	strcpy(temp, binary[sensor].name);
 	strcat(temp, ";");
 	
+	binary[sensor].value = (float)rand()/((float)RAND_MAX/10);
     itoa(binary[sensor].value, buffer, 10);
     strcat(temp, buffer);
     strcat(temp, ";");
@@ -241,7 +242,6 @@ char *createValueString(int sensor){
     binary[sensor].isAlarm = 0;
     if((binary[sensor].value <= binary[sensor].low) || (binary[sensor].value >= binary[sensor].high)){
          binary[sensor].isAlarm = 1;
-         printf("alarm!");
     }
     itoa(binary[sensor].isAlarm, buffer, 10);
     strcat(temp, buffer);
@@ -282,7 +282,6 @@ int initializeDatabase()
               //LO + (float)rand()/((float)RAND_MAX/(HI-LO));
               binary[i].value = (float)rand()/((float)RAND_MAX/10);
               
-              printf("%s", binary[i].name);
       }
 }
 
