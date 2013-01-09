@@ -13,7 +13,9 @@ typedef struct
        int value;                 //0 or 1
        char unit[20];
        char timestamp[22];        //2012-12-31_12:59:59
-       int is_alarm;              //True:False
+       int isAlarm;              //True:False
+       int low;
+       int high;
 }BinSen;
 
 
@@ -195,7 +197,7 @@ void sendSocket(SOCKET *m_socket){
 			bytesSent = send(*m_socket, p1, 100, 0);
 			if (bytesSent != SOCKET_ERROR){                      
 				bytesRecv = recv(*m_socket, recvbuf, 100, 0);
-				printf("%s", recvbuf);
+				//printf("%s", recvbuf);
 			}
         }		
 		sleep(100);     
@@ -234,7 +236,15 @@ char *createValueString(int sensor){
     strcat(temp, ";");
     
     strcat(temp, binary[sensor].unit);
+    strcat(temp, ";");
     
+    binary[sensor].isAlarm = 0;
+    if((binary[sensor].value <= binary[sensor].low) || (binary[sensor].value >= binary[sensor].high)){
+         binary[sensor].isAlarm = 1;
+         printf("alarm!");
+    }
+    itoa(binary[sensor].isAlarm, buffer, 10);
+    strcat(temp, buffer);
     
     strcat(temp, "\n");
 
@@ -264,9 +274,13 @@ int initializeDatabase()
               
               strcpy(binary[i].unit, "Nm/C");
               
-              binary[i].is_alarm = isAlarm;
+              binary[i].isAlarm = isAlarm;
               
-              binary[i].value = 1337;
+              binary[i].low = 0;
+              binary[i].high = 8;
+              
+              //LO + (float)rand()/((float)RAND_MAX/(HI-LO));
+              binary[i].value = (float)rand()/((float)RAND_MAX/10);
               
               printf("%s", binary[i].name);
       }
