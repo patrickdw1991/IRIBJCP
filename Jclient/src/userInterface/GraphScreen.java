@@ -4,7 +4,6 @@
  */
 package userInterface;
 
-import StringInterpreter.StringParser;
 import chart.LineChart;
 import java.awt.BorderLayout;
 import java.util.List;
@@ -17,7 +16,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import sensorData.Sensor;
 import sensorData.SensorList;
-import Print.PrinterHandler;
 
 /**
  *
@@ -59,14 +57,6 @@ public class GraphScreen extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String dbString = "S,sensor1,12342,sensor2,123123,E";
-            StringParser parse = new StringParser();
-            String[] strings = parse.getSensorNames(dbString);
-            //String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jList1MouseReleased(evt);
@@ -190,7 +180,7 @@ public class GraphScreen extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
-        PrinterHandler.printList(sensorList);
+        //PrinterHandler.printList(sensorList);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void test(String sensorName, int floep) {
