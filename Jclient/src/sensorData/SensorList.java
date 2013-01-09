@@ -78,7 +78,28 @@ public class SensorList {
                 }
                 break;
         }
-
         return null;
+    }
+
+    //Function which updates an existing sensor
+    //If the sensor does not exist it will create a new sensor with these values
+    /**
+     *
+     * @param String name
+     *
+     * @return
+     */
+    public void updateSensors(String sensorName, String value, String unit) {
+        for (int i = 0; i < analoog.size(); i++) {
+            if (analoog.get(i).getName().equals(sensorName)) {
+                //Sensor does exist
+                Sensor sensor = analoog.get(i);
+                sensor.update(sensorName, value);
+            }else{
+                //Make new sensor
+                AnalogSensor sensor = new AnalogSensor(sensorName, "no");
+                analoog.add(sensor);
+            }
+        }
     }
 }
