@@ -16,27 +16,18 @@ public class DigitalSensor implements Sensor {
 
     private String name;
     private List<Integer> values = new ArrayList();
-    private String sensor_unit;
-    private int limit_top;
-    private int limit_bot;
+    private String unit;
     private String timestamp;
+    private String alarm;
     Random random = new Random();
 
-    public DigitalSensor(String name, String sensor_unit, int limit_bot, int limit_top) {
-        this.name = name;
-        this.sensor_unit = sensor_unit;
-        this.limit_top = limit_top;
-        this.limit_bot = limit_bot;
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
+    public DigitalSensor(String sensorName, int value, String unit, String timestamp, String alarm,
+            int low, int high, String lowAlarm, String highAlarm) {
+        this.name = sensorName;
+        values.add(value);
+        this.unit = unit;
+        this.timestamp = timestamp;
+        this.alarm = alarm;
         
     }
 
@@ -51,9 +42,13 @@ public class DigitalSensor implements Sensor {
     }
     
     @Override
-    public void update(String name, int value){
-        this.name = name;
-        values.add(value);   
+    public void update(String sensorName, int value, String unit, String timestamp, String alarm,
+            int low, int high, String lowAlarm, String highAlarm){
+        this.name = sensorName;
+        values.add(value);
+        this.unit = unit;
+        this.timestamp = timestamp;
+        this.alarm = alarm;  
     }
     
     @Override

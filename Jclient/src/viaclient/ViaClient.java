@@ -23,11 +23,11 @@ public class ViaClient {
         SensorList sensorList = new SensorList();
         //sensorList.init();
         
-        GraphScreen screen = new GraphScreen(sensorList);
-        screen.setVisible(true);
+        //GraphScreen screen = new GraphScreen(sensorList);
+        //screen.setVisible(true);
         
         SocketHandler sockH = new SocketHandler(sensorList);
-        //sockH.openSocket();
+        sockH.openSocket();
 
         //Printerhandler print = new PrinterHandler();
 

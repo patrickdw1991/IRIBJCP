@@ -149,13 +149,17 @@ int main()
 	}
 	
 	
-
+    
+    //m_socket = acceptSocket(m_socket);         
+    
+    
     //_beginthread( sendSocket, 0, &m_socket);
     //_beginthread( receiveSocket, 0, &m_socket);
     
     while(1){
         m_socket = acceptSocket(m_socket);
 		sendSocket(&m_socket);
+		receiveSocket(&m_socket);
         sleep(100);         
     }
 
@@ -185,7 +189,7 @@ void sendSocket(SOCKET *m_socket){
     }
     //Sensor send
     while(1){
-        int i;     
+        int i;  
         //Analog Sensors
         for(i = 0; i<10; i++){
 			char *p1;
@@ -193,14 +197,15 @@ void sendSocket(SOCKET *m_socket){
 			p1 = createAnalogMsg(i);
 			int bytesSent = SOCKET_ERROR;
 			int bytesRecv = SOCKET_ERROR;
-			bytesSent = send(*m_socket, p1, 100, 0);
+			bytesSent = send(*m_socket, p1, 110, 0);
 			if (bytesSent != SOCKET_ERROR){                      
-				bytesRecv = recv(*m_socket, recvbuf, 100, 0);
+				//bytesRecv = recv(*m_socket, recvbuf, 100, 0);
 				//printf("%s", recvbuf);
 			}else{
                 printf("client disconnected");  
                 exit(EXIT_SUCCESS);
             }
+            sleep(200);
         }
         //Binary Sensors
         for(i = 0; i<10; i++){
@@ -211,11 +216,12 @@ void sendSocket(SOCKET *m_socket){
 			int bytesRecv = SOCKET_ERROR;
 			bytesSent = send(*m_socket, p1, 100, 0);
 			if (bytesSent != SOCKET_ERROR){                      
-				bytesRecv = recv(*m_socket, recvbuf, 100, 0);
+				//bytesRecv = recv(*m_socket, recvbuf, 100, 0);
 			}else{
                 printf("client disconnected");  
                 exit(EXIT_SUCCESS);
             }
+            sleep(100);
         }		
 		sleep(100);     
                       
@@ -224,15 +230,28 @@ void sendSocket(SOCKET *m_socket){
 
 void receiveSocket(SOCKET *m_socket){
      while(1){
-        int bytesRecv = SOCKET_ERROR;
+       int bytesRecv = SOCKET_ERROR;
 		char recvbuf[100] = "";
 		char quit[] = "quit";
+		char change[] = "chng";
 		bytesRecv = recv(*m_socket, recvbuf, 100, 0);
 		if(bytesRecv != SOCKET_ERROR){
-			//Check for a certain message
+			//Check for messages from client
 			if(!strncmp(recvbuf,quit, 4)){
 				exit(EXIT_SUCCESS);
-			}else{
+			//EX:chng0100009999
+            //chng/id/loww/high	
+			}else if(!strncmp(recvbuf,change, 4)){
+                  char id[2];
+                  char low[4];
+                  char high[4];
+                  strncpy(id, change+4, 6);
+                  strncpy(low, change+6, 10);
+                  strncpy(high, change+10, 14);
+                  int idI = atoi(id);                  
+                  analog[idI].low = atoi(low);
+                  analog[idI].high = atoi(high);
+            }else{
 				printf("Unrecognized command: %s \n", recvbuf);
 			}
 		}
@@ -256,6 +275,7 @@ SOCKET acceptSocket(SOCKET m_socket){
       	while (AcceptSocket == SOCKET_ERROR)
        	{
         	AcceptSocket = accept(m_socket, NULL, NULL);
+        
        	}
 
    		// else, accept the connection...
@@ -279,7 +299,7 @@ char *createBinaryMsg(int sensor){
 	strcat(temp, binary[sensor].name);
 	strcat(temp, ";");
 	
-	binary[sensor].value = (float)rand()/((float)RAND_MAX/1);
+	binary[sensor].value = (float)rand()/((float)RAND_MAX/2);
     itoa(binary[sensor].value, buffer, 10);
     strcat(temp, buffer);
     strcat(temp, ";");
@@ -299,16 +319,17 @@ char *createBinaryMsg(int sensor){
     
     strcat(temp, "\n");
 
-	static char stringBuffer[100];
-	strcpy(stringBuffer, temp);
+	static char stringBinBuffer[100];
+	memset(stringBinBuffer, 0, 255);
+	strcpy(stringBinBuffer, temp);
     
-	return stringBuffer;
+	return stringBinBuffer;
 }
 
 //Create a char array containing all the data of a analog sensor
 //ex: A;Sensor1;10;C;lowAlarm;lowerLimit;highLimit;lowAlarmMsg;highAlarmMsg\n
 char *createAnalogMsg(int sensor){
-	char temp[100] = "A;";
+	char temp[110] = "A;";
 	char buffer[10];
 	char alarm[20];
     char *tStamp;
@@ -332,6 +353,8 @@ char *createAnalogMsg(int sensor){
          strcpy(alarm, analog[sensor].lowAlarm);                  
     }else if(analog[sensor].value >= analog[sensor].high){
          strcpy(alarm, analog[sensor].highAlarm);
+    }else{
+         strcpy(alarm, "No Alarm");      
     }
     strcat(temp, alarm);
     strcat(temp, ";");
@@ -350,22 +373,23 @@ char *createAnalogMsg(int sensor){
     strcat(temp, analog[sensor].highAlarm);
     strcat(temp, "\n");
 
-	static char stringBuffer[100];
-	strcpy(stringBuffer, temp);
+	static char stringAnaBuffer[110];
+	memset(stringAnaBuffer, 0, 255);
+	strcpy(stringAnaBuffer, temp);
     
-	return stringBuffer;
+	return stringAnaBuffer;
 }
 
 int initializeDatabase()
 {
       //Initialise Binary data
       int i;
-      char binPrefix[12] = "Binary_";
-      for(i = 0; i < 12; i++){
+      for(i = 0; i < 12; i++){              
+              char binPrefix[12] = "Binary_";
               
               binary[i].id = i;             
               
-              char buffer[10];
+              char buffer[10] = "";
               itoa(i, buffer, 10);
               strcat(binPrefix, buffer);
               strcpy(binary[i].name, binPrefix);
@@ -380,19 +404,17 @@ int initializeDatabase()
       
       //Initialise Analog data
       int j;
-      char anaPrefix[12] = "Analog_";
       for(j = 0; j < 12; j++){
+              char anaPrefix[12] = "Analog_";
               
               analog[j].id = j;             
               
-              char buffer[10];
+              char buffer[10] = "";
               itoa(j, buffer, 10);
               strcat(anaPrefix, buffer);
-              strcpy(binary[i].name, anaPrefix);
-              
-              strcpy(binary[i].unit, "Celcius");       
-              
-              //TODO: Timestamp 
+              strcpy(analog[j].name, anaPrefix);    
+                           
+              strcpy(analog[j].unit, "Celcius");       
               
               analog[j].low = 0;
               analog[j].high = 8;
@@ -403,6 +425,8 @@ int initializeDatabase()
               
               
       }
+      
+      printf("Database initialised \n");
 }
 
 char *timestamp()
@@ -414,7 +438,7 @@ char *timestamp()
     Tm=localtime(&ltime);
     
     
-    char time[30] = "";
+    static char time[30] = "";
     char buffer[10];
     
     itoa(Tm->tm_mday, buffer, 10);
@@ -451,6 +475,6 @@ char *timestamp()
     //itoa(Tm->tm_msec, buffer, 10);
     //strcat(time, buffer);
     
-    printf(time);
+    return time;
     
 }

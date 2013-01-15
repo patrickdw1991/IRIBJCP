@@ -71,9 +71,9 @@ public class SocketHandler {
                 String sensor = in.readLine();
                 sensor = sensor.trim();
                 if (sensor.length() > 0) {
-                    //System.out.println(sensor);
-                    parser.readMessage(sensor);
-                    out.println(sensor.length());
+                    System.out.println(sensor);
+                    //parser.readMessage(sensor);
+                    //out.println(sensor.length());
                     
                 }
 

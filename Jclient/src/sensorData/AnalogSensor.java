@@ -16,25 +16,26 @@ public class AnalogSensor implements Sensor {
 
     private String name;
     private List<Integer> values = new ArrayList();
-    private String is_alarm;
+    private String unit;
     private String timestamp;
+    private String alarm;
+    private int low;
+    private int high;
+    private String lowAlarm;
+    private String highAlarm;
     Random random = new Random();
 
-    public AnalogSensor(String name, String is_alarm) {
-        this.name = name;
-        this.is_alarm = is_alarm;
-        /*
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        values.add(random.nextInt(10));
-        */
+    public AnalogSensor(String sensorName, int value, String unit, String timestamp, String alarm,
+            int low, int high, String lowAlarm, String highAlarm) {
+        this.name = sensorName;
+        values.add(value);
+        this.unit = unit;
+        this.timestamp = timestamp;
+        this.alarm = alarm;
+        this.low = low;
+        this.high = high;
+        this.lowAlarm = lowAlarm;
+        this.highAlarm = highAlarm;
     }
 
     @Override
@@ -48,9 +49,17 @@ public class AnalogSensor implements Sensor {
     }
     
     @Override
-    public void update(String name, int value){
-        this.name = name;
-        values.add(value);   
+    public void update(String sensorName, int value, String unit, String timestamp, String alarm,
+            int low, int high, String lowAlarm, String highAlarm){
+        this.name = sensorName;
+        values.add(value);
+        this.unit = unit;
+        this.timestamp = timestamp;
+        this.alarm = alarm;
+        this.low = low;
+        this.high = high;
+        this.lowAlarm = lowAlarm;
+        this.highAlarm = highAlarm; 
     }
     
     @Override

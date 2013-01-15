@@ -18,7 +18,8 @@ public interface Sensor {
 
     public List<Integer> getValues();
     
-    public void update(String name, int value);
+    public void update(String sensorName, int value, String unit, String timestamp, String alarm,
+            int low, int high, String lowAlarm, String highAlarm);
     
     public void setValue(int value);
 }
