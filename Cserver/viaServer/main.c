@@ -27,7 +27,7 @@ typedef struct
        int value;                 //anythin
        char unit[15];             //ex: N/m2 or C
        char timestamp[22];        //2012-12-31_12:59:59
-       int isAlarm;               //True:False
+       char alarm[20];            //low or high alarm msg
        int low;                   //low alarm limit                            
        int high;                  //high alarm limit
        char lowAlarm[20];         //low alarm message
@@ -42,15 +42,18 @@ AnaSen analog[12];
 void sendSocket();
 void receiveSocket();
 SOCKET acceptSocket(SOCKET);
-char *createValueString(int);
+char *createBinaryMsg(int);
+char *createAnalogMsg(int);
+char *timestamp();
 int initializeDatabase();
-int timestamp();
+
 
 int main()
 {
+
+    
     initializeDatabase();
-    timestamp();
-      
+              
 	WORD wVersionRequested;
 	WSADATA wsaData;
 	int wsaerr;
@@ -183,16 +186,32 @@ void sendSocket(SOCKET *m_socket){
     //Sensor send
     while(1){
         int i;     
+        //Analog Sensors
         for(i = 0; i<10; i++){
 			char *p1;
 			char recvbuf[100] = "";
-			p1 = createValueString(i);
+			p1 = createAnalogMsg(i);
 			int bytesSent = SOCKET_ERROR;
 			int bytesRecv = SOCKET_ERROR;
 			bytesSent = send(*m_socket, p1, 100, 0);
 			if (bytesSent != SOCKET_ERROR){                      
 				bytesRecv = recv(*m_socket, recvbuf, 100, 0);
 				//printf("%s", recvbuf);
+			}else{
+                printf("client disconnected");  
+                exit(EXIT_SUCCESS);
+            }
+        }
+        //Binary Sensors
+        for(i = 0; i<10; i++){
+			char *p1;
+			char recvbuf[100] = "";
+			p1 = createBinaryMsg(i);
+			int bytesSent = SOCKET_ERROR;
+			int bytesRecv = SOCKET_ERROR;
+			bytesSent = send(*m_socket, p1, 100, 0);
+			if (bytesSent != SOCKET_ERROR){                      
+				bytesRecv = recv(*m_socket, recvbuf, 100, 0);
 			}else{
                 printf("client disconnected");  
                 exit(EXIT_SUCCESS);
@@ -248,29 +267,87 @@ SOCKET acceptSocket(SOCKET m_socket){
 	}    
 }
 
-
-char *createValueString(int sensor){
-	char temp[100] = "";
+//Create a char array containing all the data of a binary sensor
+//ex: B;Sensor1;0;C;No Alarm\n
+char *createBinaryMsg(int sensor){
+	char temp[100] = "B;";
 	char buffer[10];
+	char alarm[20];
+	char *tStamp;
+    tStamp = timestamp();
 	
-	strcpy(temp, binary[sensor].name);
+	strcat(temp, binary[sensor].name);
 	strcat(temp, ";");
 	
-	binary[sensor].value = (float)rand()/((float)RAND_MAX/10);
+	binary[sensor].value = (float)rand()/((float)RAND_MAX/1);
     itoa(binary[sensor].value, buffer, 10);
     strcat(temp, buffer);
+    strcat(temp, ";");
+    
+    strcat(temp, tStamp);
     strcat(temp, ";");
     
     strcat(temp, binary[sensor].unit);
     strcat(temp, ";");
     
-    binary[sensor].isAlarm = 0;
-    if((binary[sensor].value <= binary[sensor].low) || (binary[sensor].value >= binary[sensor].high)){
-         binary[sensor].isAlarm = 1;
+    if(binary[sensor].value == 1){
+          strcpy(alarm, binary[sensor].alarm);
+    }else{
+          strcpy(alarm, "No Alarm");      
     }
-    itoa(binary[sensor].isAlarm, buffer, 10);
-    strcat(temp, buffer);
+    strcat(temp, alarm);
     
+    strcat(temp, "\n");
+
+	static char stringBuffer[100];
+	strcpy(stringBuffer, temp);
+    
+	return stringBuffer;
+}
+
+//Create a char array containing all the data of a analog sensor
+//ex: A;Sensor1;10;C;lowAlarm;lowerLimit;highLimit;lowAlarmMsg;highAlarmMsg\n
+char *createAnalogMsg(int sensor){
+	char temp[100] = "A;";
+	char buffer[10];
+	char alarm[20];
+    char *tStamp;
+    tStamp = timestamp();
+    
+	strcat(temp, analog[sensor].name);
+	strcat(temp, ";");
+	
+	analog[sensor].value = (float)rand()/((float)RAND_MAX/10);
+    itoa(analog[sensor].value, buffer, 10);
+    strcat(temp, buffer);
+    strcat(temp, ";");
+    
+    strcat(temp, analog[sensor].unit);
+    strcat(temp, ";");
+    
+    strcat(temp, tStamp);
+    strcat(temp, ";");
+    
+    if(analog[sensor].value <= analog[sensor].low){
+         strcpy(alarm, analog[sensor].lowAlarm);                  
+    }else if(analog[sensor].value >= analog[sensor].high){
+         strcpy(alarm, analog[sensor].highAlarm);
+    }
+    strcat(temp, alarm);
+    strcat(temp, ";");
+    
+    itoa(analog[sensor].low, buffer, 10);
+    strcat(temp, buffer);
+    strcat(temp, ";");
+    
+    itoa(analog[sensor].high, buffer, 10);
+    strcat(temp, buffer);
+    strcat(temp, ";");
+    
+    strcat(temp, analog[sensor].lowAlarm);
+    strcat(temp, ";");
+    
+    strcat(temp, analog[sensor].highAlarm);
     strcat(temp, "\n");
 
 	static char stringBuffer[100];
@@ -281,50 +358,99 @@ char *createValueString(int sensor){
 
 int initializeDatabase()
 {
-    
-      int isAlarm = 0;
+      //Initialise Binary data
       int i;
+      char binPrefix[12] = "Binary_";
       for(i = 0; i < 12; i++){
               
               binary[i].id = i;             
               
               char buffer[10];
               itoa(i, buffer, 10);
+              strcat(binPrefix, buffer);
+              strcpy(binary[i].name, binPrefix);
               
-              char tmp[12] = "Binary_";
+              strcpy(binary[i].unit, "Celcius");             
               
-              strcat(tmp, buffer);
+              strcpy(binary[i].alarm, "Nuclear Meltdown");
               
-              strcpy(binary[i].name, tmp);
+              //EXAMPLE: LO + (float)rand()/((float)RAND_MAX/(HI-LO));
+                            
+      }
+      
+      //Initialise Analog data
+      int j;
+      char anaPrefix[12] = "Analog_";
+      for(j = 0; j < 12; j++){
               
-              strcpy(binary[i].unit, "Nm/C");
+              analog[j].id = j;             
               
-              binary[i].isAlarm = isAlarm;
+              char buffer[10];
+              itoa(j, buffer, 10);
+              strcat(anaPrefix, buffer);
+              strcpy(binary[i].name, anaPrefix);
               
-              binary[i].low = 0;
-              binary[i].high = 8;
+              strcpy(binary[i].unit, "Celcius");       
               
-              //LO + (float)rand()/((float)RAND_MAX/(HI-LO));
-              binary[i].value = (float)rand()/((float)RAND_MAX/10);
+              //TODO: Timestamp 
+              
+              analog[j].low = 0;
+              analog[j].high = 8;
+              
+              strcpy(analog[j].lowAlarm, "Empty vessel");
+              strcpy(analog[j].highAlarm, "Overflowing vessel");
+              
+              
               
       }
 }
 
-int timestamp()
+char *timestamp()
 {
     time_t ltime;
     struct tm *Tm;
  
     ltime=time(NULL);
     Tm=localtime(&ltime);
- 
-    printf("%d %d %d, %d:%d:%d \n",
-            Tm->tm_mday,
-            Tm->tm_mon,
-            Tm->tm_year + 1900,
-            Tm->tm_hour,
-            Tm->tm_min,
-            Tm->tm_sec);
-            
+    
+    
+    char time[30] = "";
+    char buffer[10];
+    
+    itoa(Tm->tm_mday, buffer, 10);
+    strcpy(time, buffer);
+    
+    strcat(time, "-");
+    
+    itoa((Tm->tm_mon +1), buffer, 10);
+    strcat(time, buffer);
+    
+    strcat(time, "-");
+    
+    itoa((Tm->tm_year + 1900), buffer, 10);
+    strcat(time, buffer);
+    
+    strcat(time, " ");
+    
+    itoa(Tm->tm_hour, buffer, 10);
+    strcat(time, buffer);
+    
+    strcat(time, ":");
+    
+    itoa(Tm->tm_min, buffer, 10);
+    strcat(time, buffer);
+    
+    strcat(time, ":");
+    
+    itoa(Tm->tm_sec, buffer, 10);
+    strcat(time, buffer);
+    
+    //strcat(time, ":");
+    
+    //TODO: milliseconds
+    //itoa(Tm->tm_msec, buffer, 10);
+    //strcat(time, buffer);
+    
+    printf(time);
     
 }
