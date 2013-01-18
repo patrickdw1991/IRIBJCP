@@ -4,7 +4,6 @@
  */
 package StringInterpreter;
 
-import java.awt.Toolkit;
 import sensorData.SensorList;
 
 /**
