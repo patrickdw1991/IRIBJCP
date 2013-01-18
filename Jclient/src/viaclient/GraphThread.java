@@ -23,7 +23,7 @@ public class GraphThread extends Thread {
         while (true) {
             screen.update();
             try {
-                sleep(1000);
+                sleep(500);
             } catch (InterruptedException ex) {
             }
         }

@@ -21,10 +21,11 @@ public class SocketHandler {
     private SensorList sensorList;
     private StringParser parser;
 
+
     public SocketHandler(SensorList sensorList) {
         this.sensorList = sensorList;
-
         parser = new StringParser(sensorList);
+        
     }
 
     public void openSocket() {
@@ -42,7 +43,6 @@ public class SocketHandler {
         handShake();
         receiveSensors();
     }
-
 
     private void handShake() {
         while (true) {
@@ -72,8 +72,6 @@ public class SocketHandler {
                 sensor = sensor.trim();
                 if (sensor.length() > 0) {
                     parser.readMessage(sensor);
-                    //out.println(sensor.length());
-                    
                 }
 
             } catch (IOException ex) {

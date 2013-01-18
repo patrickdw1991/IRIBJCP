@@ -21,14 +21,16 @@ public class DigitalSensor implements Sensor {
     private String alarm;
     Random random = new Random();
 
-    public DigitalSensor(String sensorName, int value, String unit, String timestamp, String alarm,
+    public DigitalSensor(boolean save, String sensorName, int value, String unit, String timestamp, String alarm,
             int low, int high, String lowAlarm, String highAlarm) {
         this.name = sensorName;
-        values.add(value);
+        if (save) {
+            values.add(value);
+        }
         this.unit = unit;
         this.timestamp = timestamp;
         this.alarm = alarm;
-        
+
     }
 
     @Override
@@ -42,17 +44,24 @@ public class DigitalSensor implements Sensor {
     }
     
     @Override
-    public void update(String sensorName, int value, String unit, String timestamp, String alarm,
-            int low, int high, String lowAlarm, String highAlarm){
+    public String getTimestamp(){
+        return timestamp;
+    }
+
+    @Override
+    public void update(boolean save, String sensorName, int value, String unit, String timestamp, String alarm,
+            int low, int high, String lowAlarm, String highAlarm) {
         this.name = sensorName;
-        values.add(value);
+        if (save) {
+            values.add(value);
+        }
         this.unit = unit;
         this.timestamp = timestamp;
-        this.alarm = alarm;  
+        this.alarm = alarm;
     }
-    
+
     @Override
-    public void setValue(int value){
+    public void setValue(int value) {
         values.add(value);
     }
 

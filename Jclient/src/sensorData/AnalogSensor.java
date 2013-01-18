@@ -25,10 +25,12 @@ public class AnalogSensor implements Sensor {
     private String highAlarm;
     Random random = new Random();
 
-    public AnalogSensor(String sensorName, int value, String unit, String timestamp, String alarm,
+    public AnalogSensor(boolean save, String sensorName, int value, String unit, String timestamp, String alarm,
             int low, int high, String lowAlarm, String highAlarm) {
         this.name = sensorName;
-        values.add(value);
+        if (save) {
+            values.add(value);
+        }
         this.unit = unit;
         this.timestamp = timestamp;
         this.alarm = alarm;
@@ -49,21 +51,28 @@ public class AnalogSensor implements Sensor {
     }
     
     @Override
-    public void update(String sensorName, int value, String unit, String timestamp, String alarm,
-            int low, int high, String lowAlarm, String highAlarm){
+    public String getTimestamp(){
+        return timestamp;
+    }
+
+    @Override
+    public void update(boolean save, String sensorName, int value, String unit, String timestamp, String alarm,
+            int low, int high, String lowAlarm, String highAlarm) {
         this.name = sensorName;
-        values.add(value);
+        if (save) {
+            values.add(value);
+        }
         this.unit = unit;
         this.timestamp = timestamp;
         this.alarm = alarm;
         this.low = low;
         this.high = high;
         this.lowAlarm = lowAlarm;
-        this.highAlarm = highAlarm; 
+        this.highAlarm = highAlarm;
     }
-    
+
     @Override
-    public void setValue(int value){
+    public void setValue(int value) {
         values.add(value);
     }
 

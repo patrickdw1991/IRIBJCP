@@ -26,6 +26,7 @@ public class GraphScreen extends javax.swing.JFrame {
     private LineChart chart;
     private SensorList sensorList;
     private int index;
+    private int stepSize;
 
     /**
      * Creates new form graphScreen
@@ -55,6 +56,7 @@ public class GraphScreen extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         graphPanel = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jComboBox2 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -106,6 +108,13 @@ public class GraphScreen extends javax.swing.JFrame {
             }
         });
 
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2 Hour Display", "12 Hour Display"}));
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,9 +125,12 @@ public class GraphScreen extends javax.swing.JFrame {
                     .addComponent(jScrollPane2)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))
                 .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(graphPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 237, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -133,7 +145,9 @@ public class GraphScreen extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
                         .addComponent(jButton1))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(graphPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -175,6 +189,15 @@ public class GraphScreen extends javax.swing.JFrame {
         //PrinterHandler.printList(sensorList);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        String temp = jComboBox2.getSelectedItem().toString();
+        if (temp.equals("2 Hour Display")) {
+            stepSize = 1;       //12 stappen
+        } else if (temp.equals("12 Hour Display")) {
+            stepSize = 6;       //12 stappen
+        }
+    }//GEN-LAST:event_jComboBox2ActionPerformed
+
     private void test(String sensorName, int floep) {
         Sensor sensor = sensorList.getSensor(sensorName, floep);
 
@@ -207,36 +230,19 @@ public class GraphScreen extends javax.swing.JFrame {
     private XYDataset createDataset(Sensor sensor) {
         List<Integer> values = sensor.getValues();
 
+
         final XYSeries series1 = new XYSeries("First");
-        for (int i = 0; i < values.size(); i++) {
+        int start = 0;
+        if (values.size() >= (12 * stepSize)) {
+            start = values.size() - 12 * stepSize;
+        }
+        for (int i = start; i < values.size(); i += stepSize) {
             series1.add(i, values.get(i));
         }
 
 
-//        final XYSeries series2 = new XYSeries("Second");
-//        series2.add(1.0, 5.0);
-//        series2.add(2.0, 7.0);
-//        series2.add(3.0, 6.0);
-//        series2.add(4.0, 8.0);
-//        series2.add(5.0, 4.0);
-//        series2.add(6.0, 4.0);
-//        series2.add(7.0, 2.0);
-//        series2.add(8.0, 1.0);
-//
-//        final XYSeries series3 = new XYSeries("Third");
-//        series3.add(3.0, 4.0);
-//        series3.add(4.0, 3.0);
-//        series3.add(5.0, 2.0);
-//        series3.add(6.0, 3.0);
-//        series3.add(7.0, 6.0);
-//        series3.add(8.0, 3.0);
-//        series3.add(9.0, 4.0);
-//        series3.add(10.0, 3.0);
-
         final XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series1);
-//        dataset.addSeries(series2);
-//        dataset.addSeries(series3);
 
         return dataset;
 
@@ -251,7 +257,7 @@ public class GraphScreen extends javax.swing.JFrame {
     public void update() {
         String temp = jComboBox1.getSelectedItem().toString();
         String selection;
-        
+
         try {
             selection = jList1.getSelectedValue().toString();
             index = jList1.getSelectedIndex();
@@ -267,6 +273,13 @@ public class GraphScreen extends javax.swing.JFrame {
             jList1.setListData(sensorList.getSensorNames(0));
         } else if (temp.equals("Binary")) {
             jList1.setListData(sensorList.getSensorNames(1));
+        }
+        
+        temp = jComboBox2.getSelectedItem().toString();
+        if (temp.equals("2 Hour Display")) {
+            stepSize = 1;       //12 stappen
+        } else if (temp.equals("12 Hour Display")) {
+            stepSize = 6;       //12 stappen
         }
         jList1.setSelectedIndex(index);
 
@@ -317,6 +330,7 @@ public class GraphScreen extends javax.swing.JFrame {
     private javax.swing.JPanel graphPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;

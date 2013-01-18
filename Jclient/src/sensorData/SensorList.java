@@ -68,42 +68,43 @@ public class SensorList {
      *
      * @return void
      */
-    public void updateAnalogSensors(String sensorName, int value, String unit, String timestamp, String alarm,
+    public void updateAnalogSensors(boolean save, String sensorName, int value, String unit, String timestamp, String alarm,
             int low, int high, String lowAlarm, String highAlarm) {
         boolean update = false;
         for (int i = 0; i < analoog.size(); i++) {
             if (analoog.get(i).getName().equals(sensorName)) {
                 //Sensor does exist
                 Sensor sensor = analoog.get(i);
-                sensor.update(sensorName, value, unit, timestamp, alarm, low, high, lowAlarm, highAlarm);
+                sensor.update(save, sensorName, value, unit, timestamp, alarm, low, high, lowAlarm, highAlarm);
                 update = true;
                 break;
             }
         }
         if (!update) {
             //sensor not found
-            AnalogSensor sensor = new AnalogSensor(sensorName, value, unit, timestamp, alarm, low, high, lowAlarm, highAlarm);
+            AnalogSensor sensor = new AnalogSensor(save, sensorName, value, unit, timestamp, alarm, low, high, lowAlarm, highAlarm);
             sensor.setValue(value);
             analoog.add(sensor);
         }
     }
 
-    public void updateBinarySensors(String sensorName, int value, String unit, String timestamp, String alarm) {
+    public void updateBinarySensors(boolean save, String sensorName, int value, String unit, String timestamp, String alarm) {
         boolean update = false;
         for (int i = 0; i < digitaal.size(); i++) {
             if (digitaal.get(i).getName().equals(sensorName)) {
                 //Sensor does exist
                 Sensor sensor = digitaal.get(i);
-                sensor.update(sensorName, value, unit, timestamp, alarm, 0, 0, null, null);
+                sensor.update(save, sensorName, value, unit, timestamp, alarm, 0, 0, null, null);
                 update = true;
                 break;
             }
         }
         if (!update) {
             //sensor not found
-            DigitalSensor sensor = new DigitalSensor(sensorName, value, unit, timestamp, alarm, 0, 0, null, null);
+            DigitalSensor sensor = new DigitalSensor(save, sensorName, value, unit, timestamp, alarm, 0, 0, null, null);
             sensor.setValue(value);
             digitaal.add(sensor);
         }
     }
+
 }

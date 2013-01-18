@@ -20,7 +20,9 @@ public interface Sensor {
     
     public String getAlarm();
     
-    public void update(String sensorName, int value, String unit, String timestamp, String alarm,
+    public String getTimestamp();
+    
+    public void update(boolean save, String sensorName, int value, String unit, String timestamp, String alarm,
             int low, int high, String lowAlarm, String highAlarm);
     
     public void setValue(int value);

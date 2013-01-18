@@ -36,7 +36,7 @@ public class AlarmThread extends Thread {
             for (String name : sensorNames) {
                 Sensor sensor = list.getSensor(name, ANALOG);
                 if (!sensor.getAlarm().equalsIgnoreCase("no alarm")) {
-                    alarmList.add(sensor.getAlarm());
+                    alarmList.add("["+sensor.getTimestamp()+"] "+sensor.getAlarm());
                     Toolkit.getDefaultToolkit().beep();
                 }
             }
@@ -45,7 +45,7 @@ public class AlarmThread extends Thread {
             for (String name : sensorNames) {
                 Sensor sensor = list.getSensor(name, BINARY);
                 if (!sensor.getAlarm().equalsIgnoreCase("no alarm")) {
-                    alarmList.add(sensor.getAlarm());
+                    alarmList.add("["+sensor.getTimestamp()+"] "+sensor.getAlarm());
                     Toolkit.getDefaultToolkit().beep();
                 }
             }

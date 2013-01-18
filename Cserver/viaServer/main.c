@@ -304,10 +304,10 @@ char *createBinaryMsg(int sensor){
     strcat(temp, buffer);
     strcat(temp, ";");
     
-    strcat(temp, tStamp);
+    strcat(temp, binary[sensor].unit);
     strcat(temp, ";");
     
-    strcat(temp, binary[sensor].unit);
+    strcat(temp, tStamp);
     strcat(temp, ";");
     
     if(binary[sensor].value == 1){
