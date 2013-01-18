@@ -28,74 +28,37 @@ import sensorData.SensorList;
  */
 public class PrinterHandler {
 
-    public static void printList(SensorList list) {
-        makePDF(list);
-        startPrint();
-        
-    }
-
-    public static void startPrint() {
-        InputStream is = null;
+    public PrinterHandler(String fileName) {
+        FileInputStream textStream;
         try {
-            File file = new File("tmp.pdf");
-            //FileWriter fstream = new FileWriter("printtest.txt");
+            textStream = new FileInputStream(fileName);
 
-            is = new BufferedInputStream(new FileInputStream(file));
-            System.out.println("test");
-            PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
-            System.out.println("Number of print services: " + printServices.length);
-            for (PrintService printer : printServices) {
-                System.out.println("Printer: " + printer.getName());
-            }
-            PrintService service = PrintServiceLookup.lookupDefaultPrintService();
-            DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
-            Doc doc = new SimpleDoc(is, flavor, null);
-            DocPrintJob job = service.createPrintJob();
             PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
             aset.add(new Copies(1));
             aset.add(Sides.ONE_SIDED);
-            try {
-                job.print(doc, aset);
-            } catch (PrintException e) {
-                e.printStackTrace();
+
+            DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+            Doc mydoc = new SimpleDoc(textStream, flavor, null);
+
+            PrintService[] services = PrintServiceLookup.lookupPrintServices(
+                    flavor, aset);
+            PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
+
+            if (services.length == 0) {
+                if (defaultService == null) {
+                    System.out.println("No printer found");
+                } else {
+                    //print using default
+                    DocPrintJob job = defaultService.createPrintJob();
+                    job.print(mydoc, aset);
+
+                }
+
             }
-            is.close();
-        } catch (IOException ex) {
-            Logger.getLogger(PrinterHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                Logger.getLogger(PrinterHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("File does not exist");
+        } catch (PrintException ex) {
+            System.out.println("Print exception");
         }
     }
-
-    public static void makePDF(SensorList list){
-        try {
-            PDDocument document = new PDDocument();
-            PDPage page = new PDPage();
-            document.addPage(page);
-            PDPageContentStream contentStream;
-            contentStream = new PDPageContentStream(document, page);
-            contentStream.beginText();
-            PDFont font = PDType1Font.TIMES_ROMAN;
-            contentStream.setFont(font, 12);
-            contentStream.moveTextPositionByAmount(100, 700);
-            String[] sensorNames = list.getSensorNames(3);
-            for(int x= 0; x<sensorNames.length;x++){
-                contentStream.drawString(sensorNames[x]+"\n");
-            }
-            contentStream.endText();
-            contentStream.close();
-            document.save("tmp.pdf");
-            document.close();
-        } catch (IOException ex) {
-            
-        } catch (COSVisitorException ex2) {
-            
-        }
-
-    }
-
 }

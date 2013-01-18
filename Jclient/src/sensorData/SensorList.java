@@ -17,32 +17,14 @@ public class SensorList {
     private List<Sensor> digitaal = new ArrayList();
     private List<Sensor> analoog = new ArrayList();
 
-//    public void init() {
-//        for (int i = 0; i < 2; i++) {
-//            AnalogSensor sensor = new AnalogSensor("floep " + i, "no");
-//            sensors.add(sensor);
-//        }
-//        for (int i = 0; i < 5; i++) {
-//            DigitalSensor sensor = new DigitalSensor("digitaal " + i, "unit 1", 10, 100);
-//            digitaal.add(sensor);
-//        }
-//        for (int i = 0; i < 5; i++) {
-//            AnalogSensor sensor = new AnalogSensor("analoog " + i, "no");
-//            analoog.add(sensor);
-//        }
-//    }
-
     public String[] getSensorNames(int list) {
         List<Sensor> temp = null;
         switch (list) {
-            case 1:
+            case 0:
                 temp = analoog;
                 break;
-            case 2:
+            case 1:
                 temp = digitaal;
-                break;
-            case 3:
-                temp = sensors;
                 break;
         }
 
@@ -56,27 +38,21 @@ public class SensorList {
 
     public Sensor getSensor(String sensorName, int sensorList) {
         switch (sensorList) {
-            case 1:
+            case 0:
                 for (int i = 0; i < analoog.size(); i++) {
                     if (analoog.get(i).getName().equals(sensorName)) {
                         return analoog.get(i);
                     }
                 }
                 break;
-            case 2:
+            case 1:
                 for (int i = 0; i < digitaal.size(); i++) {
                     if (digitaal.get(i).getName().equals(sensorName)) {
                         return digitaal.get(i);
                     }
                 }
                 break;
-            case 3:
-                for (int i = 0; i < sensors.size(); i++) {
-                    if (sensors.get(i).getName().equals(sensorName)) {
-                        return sensors.get(i);
-                    }
-                }
-                break;
+
         }
         return null;
     }
@@ -111,8 +87,8 @@ public class SensorList {
             analoog.add(sensor);
         }
     }
-    
-        public void updateBinarySensors(String sensorName, int value, String unit, String timestamp, String alarm) {
+
+    public void updateBinarySensors(String sensorName, int value, String unit, String timestamp, String alarm) {
         boolean update = false;
         for (int i = 0; i < digitaal.size(); i++) {
             if (digitaal.get(i).getName().equals(sensorName)) {
@@ -125,9 +101,9 @@ public class SensorList {
         }
         if (!update) {
             //sensor not found
-            AnalogSensor sensor = new AnalogSensor(sensorName, value, unit, timestamp, alarm, 0, 0, null, null);
+            DigitalSensor sensor = new DigitalSensor(sensorName, value, unit, timestamp, alarm, 0, 0, null, null);
             sensor.setValue(value);
-            analoog.add(sensor);
+            digitaal.add(sensor);
         }
     }
 }

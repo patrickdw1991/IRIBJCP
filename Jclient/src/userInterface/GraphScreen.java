@@ -4,7 +4,6 @@
  */
 package userInterface;
 
-import Print.PrinterHandler;
 import chart.LineChart;
 import java.awt.BorderLayout;
 import java.util.List;
@@ -26,6 +25,7 @@ public class GraphScreen extends javax.swing.JFrame {
 
     private LineChart chart;
     private SensorList sensorList;
+    private int index;
 
     /**
      * Creates new form graphScreen
@@ -34,8 +34,8 @@ public class GraphScreen extends javax.swing.JFrame {
         this.sensorList = sensorList;
         initComponents();
         jList1.setListData(sensorList.getSensorNames(1));
-        
-        
+
+
     }
 
     /**
@@ -51,7 +51,7 @@ public class GraphScreen extends javax.swing.JFrame {
         jList1 = new javax.swing.JList();
         jComboBox1 = new javax.swing.JComboBox();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
+        alarmList = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         graphPanel = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
@@ -65,8 +65,7 @@ public class GraphScreen extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Binary", "Digital 10", "Digital 100" }));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Binary", "Digital 10", "Digital 100" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Analog", "Binary" }));
         jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jComboBox1MouseReleased(evt);
@@ -78,12 +77,12 @@ public class GraphScreen extends javax.swing.JFrame {
             }
         });
 
-        jList2.setModel(new javax.swing.AbstractListModel() {
+        alarmList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane2.setViewportView(alarmList);
 
         jLabel1.setText("Current Alarms");
 
@@ -120,7 +119,7 @@ public class GraphScreen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(graphPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 237, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -152,36 +151,28 @@ public class GraphScreen extends javax.swing.JFrame {
         //GetData, init graph
 
         String temp = jComboBox1.getSelectedItem().toString();
-        if (temp.equals("Binary")) {
+        if (temp.equals("Analog")) {
+            test(jList1.getSelectedValue().toString(), 0);
+        } else if (temp.equals("Binary")) {
             test(jList1.getSelectedValue().toString(), 1);
-        } else if (temp.equals("Digital 10")) {
-            test(jList1.getSelectedValue().toString(), 2);
-        } else if (temp.equals("Digital 100")) {
-            test(jList1.getSelectedValue().toString(), 3);
         }
 
     }//GEN-LAST:event_jList1MouseReleased
 
     private void jComboBox1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseReleased
-        
-
-
     }//GEN-LAST:event_jComboBox1MouseReleased
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         String temp = jComboBox1.getSelectedItem().toString();
-        if (temp.equals("Binary")) {
+        if (temp.equals("Analog")) {
+            jList1.setListData(sensorList.getSensorNames(0));
+        } else if (temp.equals("Binary")) {
             jList1.setListData(sensorList.getSensorNames(1));
-        } else if (temp.equals("Digital 10")) {
-            jList1.setListData(sensorList.getSensorNames(2));
-        } else if (temp.equals("Digital 100")) {
-            jList1.setListData(sensorList.getSensorNames(3));
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        PrinterHandler.printList(sensorList);
+        //PrinterHandler.printList(sensorList);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void test(String sensorName, int floep) {
@@ -250,6 +241,36 @@ public class GraphScreen extends javax.swing.JFrame {
         return dataset;
 
     }
+
+    public void updateAlarmList(String[] listData) {
+        alarmList.removeAll();
+        alarmList.setListData(listData);
+        alarmList.validate();
+    }
+
+    public void update() {
+        String temp = jComboBox1.getSelectedItem().toString();
+        String selection;
+        
+        try {
+            selection = jList1.getSelectedValue().toString();
+            index = jList1.getSelectedIndex();
+            if (temp.equals("Analog")) {
+                test(selection, 0);
+            } else if (temp.equals("Binary")) {
+                test(selection, 1);
+            }
+        } catch (NullPointerException ex) {
+        }
+
+        if (temp.equals("Analog")) {
+            jList1.setListData(sensorList.getSensorNames(0));
+        } else if (temp.equals("Binary")) {
+            jList1.setListData(sensorList.getSensorNames(1));
+        }
+        jList1.setSelectedIndex(index);
+
+    }
     /**
      * @param args the command line arguments
      */
@@ -292,12 +313,12 @@ public class GraphScreen extends javax.swing.JFrame {
 //        });
 //    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList alarmList;
     private javax.swing.JPanel graphPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables

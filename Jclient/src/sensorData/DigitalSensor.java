@@ -55,4 +55,11 @@ public class DigitalSensor implements Sensor {
     public void setValue(int value){
         values.add(value);
     }
+
+    /**
+     * @return the alarm
+     */
+    public String getAlarm() {
+        return alarm;
+    }
 }

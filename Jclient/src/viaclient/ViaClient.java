@@ -18,22 +18,17 @@ public class ViaClient {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-
         SensorList sensorList = new SensorList();
-        //sensorList.init();
-        
-        //GraphScreen screen = new GraphScreen(sensorList);
-        //screen.setVisible(true);
-        
+        GraphScreen screen = new GraphScreen(sensorList);
+        screen.setVisible(true);
+        AlarmThread thread = new AlarmThread(sensorList, screen);
+        thread.start();
+        GraphThread thread2 = new GraphThread(screen);
+        thread2.start();
+
         SocketHandler sockH = new SocketHandler(sensorList);
         sockH.openSocket();
-
-        //Printerhandler print = new PrinterHandler();
-
-
-
-
+        //PrinterHandler print = new PrinterHandler("printtest.txt");
 
     }
 }
