@@ -46,6 +46,7 @@ char *createBinaryMsg(int);
 char *createAnalogMsg(int);
 char *timestamp();
 int initializeDatabase();
+char *mystrsep(char**, const char*);
 
 
 int main()
@@ -154,7 +155,7 @@ int main()
     
     
     //_beginthread( sendSocket, 0, &m_socket);
-    //_beginthread( receiveSocket, 0, &m_socket);
+    _beginthread( receiveSocket, 0, &m_socket);
     
     while(1){
         m_socket = acceptSocket(m_socket);
@@ -230,27 +231,49 @@ void sendSocket(SOCKET *m_socket){
 
 void receiveSocket(SOCKET *m_socket){
      while(1){
-       int bytesRecv = SOCKET_ERROR;
+        char* token;    
+        char* string;
+        int id, low, high;  
+        int bytesRecv = SOCKET_ERROR;
 		char recvbuf[100] = "";
 		char quit[] = "quit";
-		char change[] = "chng";
-		bytesRecv = recv(*m_socket, recvbuf, 100, 0);
+		char typeA[] = "A";    //Analog type
+        bytesRecv = recv(*m_socket, recvbuf, 100, 0);
 		if(bytesRecv != SOCKET_ERROR){
 			//Check for messages from client
 			if(!strncmp(recvbuf,quit, 4)){
 				exit(EXIT_SUCCESS);
-			//EX:chng0100009999
-            //chng/id/loww/high	
-			}else if(!strncmp(recvbuf,change, 4)){
-                  char id[2];
-                  char low[4];
-                  char high[4];
-                  strncpy(id, change+4, 6);
-                  strncpy(low, change+6, 10);
-                  strncpy(high, change+10, 14);
-                  int idI = atoi(id);                  
-                  analog[idI].low = atoi(low);
-                  analog[idI].high = atoi(high);
+			//EX:A;ID;LOW;HIGH
+			}else if(!strncmp(recvbuf,typeA, 1)){
+                  string = strdup(recvbuf);
+                  
+                  printf("received: %s", recvbuf);
+                  int i = 0;                  
+                  while ((token = mystrsep(&string, ";")) != NULL)
+                  {
+                       char buffer[4];                        
+                       switch(i){
+                            case 1:
+                                 sprintf (buffer, "%s", token);
+                                 id = atoi(buffer);
+                                 break;     
+                            case 2:
+                                 sprintf (buffer, "%s", token);
+                                 low = atoi(buffer);
+                                 break;     
+                            case 3:
+                                 sprintf (buffer, "%s", token);
+                                 high = atoi(buffer);
+                                 break;     
+                                                     
+                       } 
+                       i++;
+                  }
+                  printf("Updated Sensor_%d \nLow alarm limit: %d \nHigh alarm limit: %d \n", id, low, high);
+                  
+                                  
+                  analog[id].low = low;
+                  analog[id].high = high;
             }else{
 				printf("Unrecognized command: %s \n", recvbuf);
 			}
@@ -477,4 +500,24 @@ char *timestamp()
     
     return time;
     
+}
+
+char* mystrsep(char** stringp, const char* delim)
+{
+	char* start = *stringp;
+	char* p;
+
+	p = (start != NULL) ? strpbrk(start, delim) : NULL;
+
+	if (p == NULL)
+	{
+		*stringp = NULL;
+	}
+	else
+	{
+		*p = '\0';
+		*stringp = p + 1;
+	}
+
+	return start;
 }

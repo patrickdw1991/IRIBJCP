@@ -21,11 +21,10 @@ public class SocketHandler {
     private SensorList sensorList;
     private StringParser parser;
 
-
     public SocketHandler(SensorList sensorList) {
         this.sensorList = sensorList;
         parser = new StringParser(sensorList);
-        
+
     }
 
     public void openSocket() {
@@ -82,6 +81,20 @@ public class SocketHandler {
             } catch (InterruptedException ex) {
                 System.out.println("sleep error");
             }
+            
         }
+    }
+
+    /**
+     * Change the alarm values of a sensor
+     * @param sensorId
+     * @param low
+     * @param high 
+     */
+    public void sendMessage(int sensorId, int low, int high) {
+        String buff;
+
+        buff = ("A;" + sensorId + ";" + low + ";" + high);
+        out.println(buff);
     }
 }

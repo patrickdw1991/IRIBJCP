@@ -4,6 +4,7 @@
  */
 package userInterface;
 
+import Print.PrinterHandler;
 import chart.LineChart;
 import java.awt.BorderLayout;
 import java.util.List;
@@ -25,6 +26,7 @@ public class GraphScreen extends javax.swing.JFrame {
 
     private LineChart chart;
     private SensorList sensorList;
+    private PrinterHandler handler;
     private int index;
     private int stepSize;
 
@@ -186,7 +188,7 @@ public class GraphScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //PrinterHandler.printList(sensorList);
+        handler = new PrinterHandler(sensorList);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
