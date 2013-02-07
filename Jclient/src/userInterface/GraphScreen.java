@@ -7,6 +7,8 @@ package userInterface;
 import Print.PrinterHandler;
 import chart.LineChart;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.List;
 import viaclient.SocketHandler;
 import org.jfree.chart.ChartFactory;
@@ -124,7 +126,7 @@ public class GraphScreen extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Alarm!");
+        jButton2.setText("Alarm settings");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -219,6 +221,8 @@ public class GraphScreen extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         AlarmForm alarm = new AlarmForm(sensorList, sock);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        alarm.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         alarm.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
