@@ -4,6 +4,7 @@
  */
 package userInterface;
 
+import java.util.List;
 import sensorData.SensorList;
 
 /**
@@ -15,10 +16,16 @@ public class AlarmForm extends javax.swing.JFrame {
     /**
      * Creates new form AlarmForm
      */
-    SensorList sensorList = new SensorList();
+    SensorList sensorList;
     
-    public AlarmForm() {
+    public AlarmForm(SensorList sensorList) {
+        this.sensorList=sensorList;
+        String[] sensorNames = sensorList.getSensorNames(0);
+
         initComponents();
+        
+        jSlider2.setValue(sensorList.getSensor(jComboBox1.getSelectedItem().toString(), 0).getHigh());
+        jSlider1.setValue(sensorList.getSensor(jComboBox1.getSelectedItem().toString(), 0).getLow());
     }
 
     /**
@@ -41,19 +48,28 @@ public class AlarmForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(sensorList.getSensorNames(0)));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
+        jSlider1.setMaximum(10);
         jSlider1.setPaintLabels(true);
         jSlider1.setPaintTicks(true);
         jSlider1.setSnapToTicks(true);
+        jSlider1.setValue(5);
         jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSlider1StateChanged(evt);
             }
         });
 
+        jSlider2.setMaximum(10);
         jSlider2.setPaintLabels(true);
         jSlider2.setPaintTicks(true);
         jSlider2.setSnapToTicks(true);
+        jSlider2.setValue(5);
         jSlider2.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSlider2StateChanged(evt);
@@ -134,6 +150,11 @@ public class AlarmForm extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        jSlider2.setValue(sensorList.getSensor(jComboBox1.getSelectedItem().toString(), 0).getHigh());
+        jSlider1.setValue(sensorList.getSensor(jComboBox1.getSelectedItem().toString(), 0).getLow());
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -171,7 +192,7 @@ public class AlarmForm extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new AlarmForm().setVisible(true);
+                //new AlarmForm().setVisible(true);
             }
         });
     }

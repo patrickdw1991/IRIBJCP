@@ -82,4 +82,12 @@ public class AnalogSensor implements Sensor {
     public String getAlarm() {
         return alarm;
     }
+    
+    public int getHigh() {
+        return high;
+    }
+    
+    public int getLow() {
+        return low;
+    }
 }

@@ -213,7 +213,7 @@ public class GraphScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        AlarmForm alarmshit = new AlarmForm();
+        AlarmForm alarmshit = new AlarmForm(sensorList);
         alarmshit.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 

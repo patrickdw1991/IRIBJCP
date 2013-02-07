@@ -24,4 +24,8 @@ public interface Sensor {
             int low, int high, String lowAlarm, String highAlarm);
     
     public void setValue(int value);
+    
+    public int getHigh();
+    
+    public int getLow();
 }
