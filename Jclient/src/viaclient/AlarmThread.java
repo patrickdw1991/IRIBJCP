@@ -5,7 +5,12 @@
 package viaclient;
 
 import java.awt.Toolkit;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import sensorData.Sensor;
 import sensorData.SensorList;
@@ -29,6 +34,12 @@ public class AlarmThread extends Thread {
 
     @Override
     public void run() {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+
+        write("Alarm Data " + dateFormat.format(date) + "\n");
+
         while (true) {
 
             List<String> alarmList = new ArrayList();
@@ -36,7 +47,8 @@ public class AlarmThread extends Thread {
             for (String name : sensorNames) {
                 Sensor sensor = list.getSensor(name, ANALOG);
                 if (!sensor.getAlarm().equalsIgnoreCase("no alarm")) {
-                    alarmList.add("["+sensor.getTimestamp()+"] "+sensor.getAlarm());
+                    alarmList.add("[" + sensor.getTimestamp() + "] " + sensor.getAlarm());
+                    write("[" + sensor.getTimestamp() + "] " + sensor.getAlarm());
                     Toolkit.getDefaultToolkit().beep();
                 }
             }
@@ -45,7 +57,8 @@ public class AlarmThread extends Thread {
             for (String name : sensorNames) {
                 Sensor sensor = list.getSensor(name, BINARY);
                 if (!sensor.getAlarm().equalsIgnoreCase("no alarm")) {
-                    alarmList.add("["+sensor.getTimestamp()+"] "+sensor.getAlarm());
+                    alarmList.add("[" + sensor.getTimestamp() + "] " + sensor.getAlarm());
+                    write("[" + sensor.getTimestamp() + "] " + sensor.getAlarm());
                     Toolkit.getDefaultToolkit().beep();
                 }
             }
@@ -56,7 +69,22 @@ public class AlarmThread extends Thread {
             try {
                 sleep(1000);
             } catch (InterruptedException ex) {
+                break;
             }
+        }
+
+
+    }
+
+    private void write(String alarm) {
+        try {
+            // Create file 
+            FileWriter fstream = new FileWriter("Alarm.txt", true);
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write(alarm + "\n");
+            out.close();
+        } catch (Exception e) {//Catch exception if any
+            System.err.println("Error: " + e.getMessage());
         }
     }
 }

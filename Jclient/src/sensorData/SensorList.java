@@ -57,6 +57,10 @@ public class SensorList {
         return null;
     }
 
+    public List<Sensor> getAnalogSensorlist(){
+        return analoog;
+    }
+    
     /**
      * Function which updates an existing sensor. If the sensor does not exist
      * it will create a new sensor with these values.
