@@ -4,7 +4,7 @@
  */
 package userInterface;
 
-import java.util.List;
+import viaclient.SocketHandler;
 import sensorData.SensorList;
 
 /**
@@ -16,10 +16,12 @@ public class AlarmForm extends javax.swing.JFrame {
     /**
      * Creates new form AlarmForm
      */
-    SensorList sensorList;
+    private SensorList sensorList;
+    private SocketHandler sock;
     
-    public AlarmForm(SensorList sensorList) {
+    public AlarmForm(SensorList sensorList, SocketHandler sock) {
         this.sensorList=sensorList;
+        this.sock = sock;
         String[] sensorNames = sensorList.getSensorNames(0);
 
         initComponents();
@@ -81,6 +83,11 @@ public class AlarmForm extends javax.swing.JFrame {
         jLabel2.setText("jLabel2");
 
         jButton1.setText("Ok");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Cancel");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -98,21 +105,18 @@ public class AlarmForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSlider2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jSlider2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -154,6 +158,18 @@ public class AlarmForm extends javax.swing.JFrame {
         jSlider2.setValue(sensorList.getSensor(jComboBox1.getSelectedItem().toString(), 0).getHigh());
         jSlider1.setValue(sensorList.getSensor(jComboBox1.getSelectedItem().toString(), 0).getLow());
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int high = jSlider2.getValue();
+        int low = jSlider1.getValue();
+        
+        String name  = sensorList.getSensor(jComboBox1.getSelectedItem().toString(), 0).getName();
+        String subname = name.substring(name.length() -1, name.length());
+        System.out.println(subname);
+        int id = Integer.parseInt(subname);
+        
+        sock.sendMessage(id, low, high);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

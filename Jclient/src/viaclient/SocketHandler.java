@@ -24,6 +24,7 @@ public class SocketHandler {
     public SocketHandler(SensorList sensorList) {
         this.sensorList = sensorList;
         parser = new StringParser(sensorList);
+        openSocket();
 
     }
 
@@ -40,7 +41,7 @@ public class SocketHandler {
             System.exit(1);
         }
         handShake();
-        receiveSensors();
+        
     }
 
     private void handShake() {
@@ -64,7 +65,7 @@ public class SocketHandler {
 
     }
 
-    private void receiveSensors() {
+    public void receiveSensors() {
         while (true) {
             try {
                 String sensor = in.readLine();

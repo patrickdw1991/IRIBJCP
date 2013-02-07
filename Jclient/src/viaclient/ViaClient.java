@@ -19,16 +19,16 @@ public class ViaClient {
      */
     public static void main(String[] args) {
         SensorList sensorList = new SensorList();
-        GraphScreen screen = new GraphScreen(sensorList);
+        SocketHandler sockH = new SocketHandler(sensorList);;
+
+        GraphScreen screen = new GraphScreen(sensorList, sockH);
         screen.setVisible(true);
         AlarmThread thread = new AlarmThread(sensorList, screen);
         thread.start();
         GraphThread thread2 = new GraphThread(screen);
         thread2.start();
 
-        SocketHandler sockH = new SocketHandler(sensorList);
-        sockH.openSocket();
-        //PrinterHandler print = new PrinterHandler("printtest.txt");
+        sockH.receiveSensors();
 
     }
 }

@@ -8,6 +8,7 @@ import Print.PrinterHandler;
 import chart.LineChart;
 import java.awt.BorderLayout;
 import java.util.List;
+import viaclient.SocketHandler;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -29,18 +30,22 @@ public class GraphScreen extends javax.swing.JFrame {
     private PrinterHandler handler;
     private int index;
     private int stepSize;
+    private SocketHandler sock;
     
 
     /**
      * Creates new form graphScreen
      */
-    public GraphScreen(SensorList sensorList) {
+    public GraphScreen(SensorList sensorList, SocketHandler sock) {
         this.sensorList = sensorList;
+        this.sock = sock;
         initComponents();
         jList1.setListData(sensorList.getSensorNames(1));
 
 
     }
+
+  
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -213,8 +218,8 @@ public class GraphScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        AlarmForm alarmshit = new AlarmForm(sensorList);
-        alarmshit.setVisible(true);
+        AlarmForm alarm = new AlarmForm(sensorList, sock);
+        alarm.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void test(String sensorName, int floep) {
